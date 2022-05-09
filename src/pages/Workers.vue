@@ -1,5 +1,10 @@
 <template>
   <q-page padding>
+    <div v-if="isLoadingData" class="fixed-center">
+      <div class="loader"></div>
+      <div class="">Please wait...</div>
+    </div>
+
     <q-list
       bordered
       class="rounded-borders"
@@ -201,7 +206,7 @@
 <script>
 import { useQuasar } from "quasar";
 import { api } from "boot/axios";
-import { ref, onMounted, onBeforeUpdate } from "vue";
+import { ref, onBeforeUpdate } from "vue";
 
 export default {
   // name: 'PageName',
@@ -211,6 +216,7 @@ export default {
 
     let workers = ref([]);
     let jobPositionOptions = ref([]);
+    let isLoadingData = ref(true);
 
     onBeforeUpdate(() => {
       workers.value.forEach((k, v) => {
@@ -219,46 +225,55 @@ export default {
     });
 
     // load jobPositions
-    api
-      .get("api/v1/job_positions")
-      .then((response) => {
-        jobPositionOptions.value = response.data;
-      })
-      .catch((err) => {
-        $q.notify({
-          color: "negative",
-          position: "top",
-          message: `Failed to load data from server: ${err.message}`,
-          icon: "report_problem",
-          progress: true,
+    async function loadJobPositions() {
+      api
+        .get("api/v1/job_positions")
+        .then((response) => {
+          jobPositionOptions.value = response.data;
+        })
+        .catch((err) => {
+          $q.notify({
+            color: "negative",
+            position: "top",
+            message: `Failed to load data from server: ${err.message}`,
+            icon: "report_problem",
+            progress: true,
+          });
         });
-      });
+    }
 
     // load workers
-    api
-      .get("api/v1/workers")
-      .then((response) => {
-        workers.value = response.data;
+    async function loadWorkers() {
+      await loadJobPositions();
+      api
+        .get("api/v1/workers")
+        .then((response) => {
+          workers.value = response.data;
 
-        workers.value.forEach((k, v) => {
-          let cur_job_pos = jobPositionOptions.value.find((obj) => {
-            return obj.id === k["fk_job_position"];
+          workers.value.forEach((k, v) => {
+            let cur_job_pos = jobPositionOptions.value.find((obj) => {
+              return obj.id === k["fk_job_position"];
+            });
+
+            k["__model_job_pos"] = ref(cur_job_pos.id);
+            k["__model_date"] = ref(k.birthDate);
+            k["__formWorker"] = ref(null);
           });
 
-          k["__model_job_pos"] = ref(cur_job_pos.id);
-          k["__model_date"] = ref(k.birthDate);
-          k["__formWorker"] = ref(null);
+          isLoadingData.value = false;
+        })
+        .catch((err) => {
+          $q.notify({
+            color: "negative",
+            position: "top",
+            message: `Failed to load data from server: ${err.message}`,
+            icon: "report_problem",
+            progress: true,
+          });
         });
-      })
-      .catch((err) => {
-        $q.notify({
-          color: "negative",
-          position: "top",
-          message: `Failed to load data from server: ${err.message}`,
-          icon: "report_problem",
-          progress: true,
-        });
-      });
+    }
+
+    loadWorkers();
 
     /**
      *
@@ -399,6 +414,7 @@ export default {
     return {
       workers,
       jobPositionOptions,
+      isLoadingData,
       onAddNewWorker,
       onSaveWorker,
       onRemoveWorker,
@@ -413,5 +429,23 @@ export default {
   max-width: 150px;
   margin-right: 10px;
   margin-bottom: 10px;
+}
+
+.loader {
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
