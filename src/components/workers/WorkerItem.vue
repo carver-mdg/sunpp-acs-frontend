@@ -21,6 +21,14 @@
                     </div>
                   </q-item-section>
                 </q-item>
+                <q-item clickable disable>
+                  <q-item-section>
+                    <div class="row items-center">
+                      <q-icon name="menu_book" class="col" />
+                      <div class="col">Журнал отгулов</div>
+                    </div>
+                  </q-item-section>
+                </q-item>
                 <q-item clickable @click="onDeleteWorker(worker.id)">
                   <q-item-section>
                     <div class="row items-center">
