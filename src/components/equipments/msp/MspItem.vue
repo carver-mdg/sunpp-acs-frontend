@@ -30,7 +30,7 @@
                 </q-item>
                 <q-item clickable @click="onDeleteMsp(msp.id)">
                   <q-item-section>
-                    <div class="row items-center">
+                    <div class="row items-center text-negative">
                       <q-icon name="delete" class="col" />
                       <div class="col">Delete</div>
                     </div>
