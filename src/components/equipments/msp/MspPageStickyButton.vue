@@ -98,7 +98,7 @@ export default defineComponent({
               storeMsp.saveMsp({
                 msp: new MspModel({
                   serialNumber: row["Номер"],
-                  yearManufacture: row["Год"],
+                  yearManufacture: row["Год"].replaceAll("-", "."),
                   fkPosInstalledId: storePositions.getIdByPosition(
                     row["Позиция"]
                   )?.id,
