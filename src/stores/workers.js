@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { api } from "boot/axios";
-import WorkerModel from "../models/WorkerModel"
+import WorkerModel from "src/models/workers/WorkerModel"
 
 export const useWorkersStore = defineStore('workers', {
   state: () => ({

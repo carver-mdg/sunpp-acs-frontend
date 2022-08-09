@@ -27,7 +27,7 @@ import { useQuasar } from "quasar";
 import { useWorkersStore } from "stores/workers";
 import WorkerFormEdit from "src/components/workers/WorkerFormEdit.vue";
 import WorkerItem from "components/workers/WorkerItem.vue";
-import WorkerModel from "../models/WorkerModel";
+import WorkerModel from "src/models/workers/WorkerModel";
 
 export default {
   name: "WorkersPage",

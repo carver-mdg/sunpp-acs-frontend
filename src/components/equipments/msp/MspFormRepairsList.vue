@@ -94,8 +94,8 @@ import { defineComponent, ref } from "vue";
 import { useMspRepairsStore } from "stores/equipments/msp/mspRepairs";
 import { usePositionsStore } from "stores/positions";
 import { useWorkersStore } from "stores/workers";
-import MspRepairModel from "../../../models/equipments/msp/MspRepairModel";
-import WorkerModel from "src/models/WorkerModel";
+import MspRepairModel from "src/models/equipments/msp/MspRepairModel";
+import WorkerModel from "src/models/workers/WorkerModel";
 
 export default defineComponent({
   name: "MspFormRepairsList",

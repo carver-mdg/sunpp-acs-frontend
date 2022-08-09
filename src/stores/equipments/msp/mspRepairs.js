@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { api } from "boot/axios";
-import RepairTypeModel from "../../../models/equipments/RepairTypeModel";
-import MspRepairModel from "../../../models/equipments/msp/MspRepairModel";
+import RepairTypeModel from "src/models/equipments/RepairTypeModel";
+import MspRepairModel from "src/models/equipments/msp/MspRepairModel";
 
 export const useMspRepairsStore = defineStore('mspRepairs', {
   state: () => ({

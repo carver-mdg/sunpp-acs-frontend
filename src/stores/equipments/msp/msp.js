@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { api } from "boot/axios";
-import MspModel from "../../../models/equipments/msp/MspModel";
+import MspModel from "src/models/equipments/msp/MspModel";
 import { usePositionsStore } from "stores/positions";
 
 const storePositions = usePositionsStore();
