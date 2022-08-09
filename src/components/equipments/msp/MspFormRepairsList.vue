@@ -255,6 +255,7 @@ export default defineComponent({
                 message: `Ремонт (${row.dateRepair} / ${
                   storeMspRepairs.getTypeRepairById(row.fkTypeRepairId).name
                 }) был удалён`,
+                progress: true,
               });
             },
             errFunc: (err) => {

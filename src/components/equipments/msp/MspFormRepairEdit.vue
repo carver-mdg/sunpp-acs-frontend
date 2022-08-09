@@ -437,6 +437,7 @@ export default defineComponent({
             position: "top",
             icon: "cloud_done",
             message: "Msp repair has been added",
+            progress: true,
           });
 
           storeMspRepairs.isShowRepairEditDialog = false;
@@ -468,6 +469,7 @@ export default defineComponent({
             position: "top",
             icon: "cloud_done",
             message: "Msp repair has been updated",
+            progress: true,
           });
 
           storeMspRepairs.isShowRepairEditDialog = false;

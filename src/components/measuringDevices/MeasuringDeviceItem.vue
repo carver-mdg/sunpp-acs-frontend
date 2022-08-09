@@ -152,6 +152,7 @@ export default {
                 position: "top",
                 icon: "cloud_done",
                 message: "Device has been deleted",
+                progress: true,
               });
             },
             errFunc: (err) => {

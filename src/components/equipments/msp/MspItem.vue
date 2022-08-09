@@ -115,6 +115,7 @@ export default defineComponent({
                 position: "top",
                 icon: "cloud_done",
                 message: "MSP has been deleted",
+                progress: true,
               });
             },
             errFunc: (err) => {
@@ -143,6 +144,7 @@ export default defineComponent({
             position: "top",
             icon: "cloud_done",
             message: "MSP repairs has been loaded",
+            progress: true,
           });
         },
         errFunc: (err) => {

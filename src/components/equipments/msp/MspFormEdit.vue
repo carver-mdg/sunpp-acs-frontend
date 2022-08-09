@@ -141,6 +141,7 @@ export default defineComponent({
             position: "top",
             icon: "cloud_done",
             message: "Msp has been added",
+            progress: true,
           });
         },
         errFunc: (err) => {
@@ -172,6 +173,7 @@ export default defineComponent({
             position: "top",
             icon: "cloud_done",
             message: "Msp has been updated",
+            progress: true,
           });
         },
         errFunc: (err) => {

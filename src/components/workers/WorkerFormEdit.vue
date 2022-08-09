@@ -224,6 +224,7 @@ export default defineComponent({
             position: "top",
             icon: "cloud_done",
             message: "Worker has been added",
+            progress: true,
           });
         },
         errFunc: (err) => {
@@ -254,6 +255,7 @@ export default defineComponent({
             position: "top",
             icon: "cloud_done",
             message: "Worker has been updated",
+            progress: true,
           });
         },
         errFunc: (err) => {

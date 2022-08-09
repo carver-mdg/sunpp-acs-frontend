@@ -122,6 +122,7 @@ export default defineComponent({
                 position: "top",
                 icon: "cloud_done",
                 message: "Worker has been deleted",
+                progress: true,
               });
             },
             errFunc: (err) => {
