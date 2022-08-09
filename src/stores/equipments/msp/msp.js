@@ -47,7 +47,7 @@ export const useMspStore = defineStore('msp', {
             this.msp_s.push(new MspModel(response.data[idx]));
         })
         .catch((err) => {
-          errFunc(err);
+          errFunc(err.response?.data?.message_error || err);
         })
     },
 
@@ -63,7 +63,7 @@ export const useMspStore = defineStore('msp', {
           okFunc()
         })
         .catch((err) => {
-          errFunc(err);
+          errFunc(err.response?.data?.message_error || err);
         })
     },
 
@@ -84,7 +84,7 @@ export const useMspStore = defineStore('msp', {
           okFunc();
         })
         .catch((err) => {
-          errFunc(err);
+          errFunc(err.response?.data?.message_error || err);
         })
     },
 
@@ -103,7 +103,7 @@ export const useMspStore = defineStore('msp', {
           okFunc();
         })
         .catch((err) => {
-          errFunc(err);
+          errFunc(err.response?.data?.message_error || err);
         })
     },
   }
