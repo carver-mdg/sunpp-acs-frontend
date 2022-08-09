@@ -27,7 +27,8 @@ export const useMeasuringDevicesStore = defineStore('measuringDevices', {
         searchDevices: (state) => {
             return (text) => state.devices.filter(device =>
                 device.model.toLowerCase().includes(text) ||
-                device.serialNumber.toString().toLowerCase().includes(text))
+                device.serialNumber.toString().toLowerCase().includes(text) ||
+                state.getDeviceTypeById(device.fkDeviceTypeId)?.name.toLowerCase().includes(text))
         },
 
         getDeviceIdxArrById: (state) => {

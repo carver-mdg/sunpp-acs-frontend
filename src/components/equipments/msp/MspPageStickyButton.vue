@@ -190,7 +190,7 @@ export default defineComponent({
         message: "What to look for ?",
         prompt: {
           model: storeMsp.searchText,
-          type: "text", // optional
+          type: "text",
         },
         cancel: true,
         persistent: true,

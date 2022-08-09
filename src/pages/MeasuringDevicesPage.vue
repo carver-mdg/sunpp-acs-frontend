@@ -4,7 +4,7 @@
 
     <div class="row q-gutter-sm flex-center">
       <MeasuringDeviceItem
-        v-for="measuringDevice in storeMeasuringDevices.devices"
+        v-for="measuringDevice in storeMeasuringDevices.searchDevices(storeMeasuringDevices.searchText)"
         :key="measuringDevice.id"
         :measuringDevice="measuringDevice"
       />

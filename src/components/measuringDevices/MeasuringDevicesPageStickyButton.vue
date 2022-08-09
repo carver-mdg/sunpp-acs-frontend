@@ -98,10 +98,15 @@ export default {
 
               storeMeasuringDevices.saveDevice({
                 device: new MeasuringDeviceModel({
-                  fkDeviceTypeId: storeMeasuringDevices.getDeviceTypeByName(row["Тип устройства"]).id,
+                  fkDeviceTypeId: storeMeasuringDevices.getDeviceTypeByName(
+                    row["Тип устройства"]
+                  ).id,
                   model: row["Модель"],
                   serialNumber: row["Серийный номер"],
-                  dateCheckNext: row["Дата след. проверки"].replaceAll("-", "."),
+                  dateCheckNext: row["Дата след. проверки"].replaceAll(
+                    "-",
+                    "."
+                  ),
                 }),
                 okFunc: () => {
                   $q.notify({
@@ -188,7 +193,23 @@ export default {
     /**
      *
      */
-    const onSearchMeasuringDevice = () => {};
+    const onSearchMeasuringDevice = () => {
+      $q.dialog({
+        title: "Search",
+        message: "What to look for ?",
+        prompt: {
+          model: storeMeasuringDevices.searchText,
+          type: "text",
+        },
+        cancel: true,
+        persistent: true,
+      })
+        .onOk((data) => {
+          storeMeasuringDevices.searchText = data;
+        })
+        .onCancel(() => {})
+        .onDismiss(() => {});
+    };
 
     return {
       storeMeasuringDevices,
