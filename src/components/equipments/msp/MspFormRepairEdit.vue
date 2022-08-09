@@ -23,12 +23,19 @@
               clearable
               v-model="storeMspRepairs.curEditRepairTypeRepairModelValue"
               :options="storeMspRepairs.typeRepairs"
+              reactive-rules
+              :rules="[(val) => !!val || 'Field is required']"
               option-value="id"
               option-label="name"
               emit-value
               map-options
               label="Тип ремонта"
-            />
+            >
+              <template v-slot:label>
+                <span class="text-weight-bold text-red">*</span>
+                Тип ремонта
+              </template>
+            </q-select>
 
             <q-select
               outlined
@@ -41,10 +48,17 @@
               option-label="pos"
               emit-value
               map-options
+              reactive-rules
+              :rules="[(val) => !!val || 'Field is required']"
               @filter="filterQselPositionsRemoved"
               @update:model-value="onChangeQselPositionsRemoved"
               label="Позиция демонтажа"
             >
+              <template v-slot:label>
+                <span class="text-weight-bold text-red">*</span>
+                Позиция демонтажа
+              </template>
+
               <template v-slot:no-option>
                 <q-item>
                   <q-item-section class="text-grey">
@@ -65,10 +79,17 @@
               option-label="pos"
               emit-value
               map-options
+              reactive-rules
+              :rules="[(val) => !!val || 'Field is required']"
               @filter="filterQselPositionsInstalled"
               @update:model-value="onChangeQselPositionsInstalled"
               label="Позиция установки"
             >
+              <template v-slot:label>
+                <span class="text-weight-bold text-red">*</span>
+                Позиция установки
+              </template>
+
               <template v-slot:no-option>
                 <q-item>
                   <q-item-section class="text-grey">
@@ -205,8 +226,11 @@
               v-model="storeMspRepairs.curEditRepair.dateRepair"
               label-slot
               mask="##.##.####"
+              reactive-rules
+              :rules="[(val) => !!val || 'Field is required']"
             >
               <template v-slot:label>
+                <span class="text-weight-bold text-red">*</span>
                 <q-icon name="calendar_today" /> Дата ремонта
               </template>
               <template v-slot:append>
@@ -260,14 +284,21 @@
               "
               emit-value
               map-options
+              reactive-rules
+              :rules="[(val) => !!val || 'Field is required']"
               label="Исполнители"
-            />
-
-            <q-item dense>
-              <span class="text-weight-bold text-red">*</span>
-              Indicates required fields
-            </q-item>
+            >
+              <template v-slot:label>
+                <span class="text-weight-bold text-red">*</span>
+                <q-icon name="perm_identity" /> Исполнители
+              </template>
+            </q-select>
           </div>
+        </q-card-section>
+
+        <q-card-section>
+          <span class="text-weight-bold text-red">*</span>
+          Indicates required fields
         </q-card-section>
 
         <q-separator />
@@ -425,7 +456,10 @@ export default defineComponent({
     /**
      *
      */
-    const onSaveRepair = () => {
+    const onSaveRepair = async () => {
+      let result_validate = await formEditRepairMsp.value.validate();
+      if (!result_validate) return;
+
       prepareRepairBeforeSaveUpdate();
 
       storeMspRepairs.saveRepair({
@@ -457,7 +491,10 @@ export default defineComponent({
     /**
      *
      */
-    const onUpdateRepair = () => {
+    const onUpdateRepair = async () => {
+      let result_validate = await formEditRepairMsp.value.validate();
+      if (!result_validate) return;
+
       prepareRepairBeforeSaveUpdate();
 
       storeMspRepairs.updateRepair({

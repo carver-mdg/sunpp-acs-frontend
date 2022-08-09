@@ -26,6 +26,7 @@
               :option-label="
                 (item) => (item === null ? 'Null value' : `${item?.name}`)
               "
+              reactive-rules
               :rules="[(val) => !!val || 'Field is required']"
               emit-value
               map-options
@@ -71,6 +72,7 @@
               v-model="storeMeasuringDevices.curEditDevice.dateCheckNext"
               label-slot
               mask="##.##.####"
+              reactive-rules
               :rules="[(val) => !!val || 'Field is required']"
             >
               <template v-slot:label>
@@ -105,6 +107,11 @@
               </template>
             </q-input>
           </div>
+        </q-card-section>
+
+        <q-card-section>
+          <span class="text-weight-bold text-red">*</span>
+          Indicates required fields
         </q-card-section>
 
         <q-separator />
@@ -152,7 +159,6 @@ export default {
     const onSaveDevice = async () => {
       let result_validate = await formEditDevice.value.validate();
       if (!result_validate) return;
-      storeMeasuringDevices.isShowEditDialog = false;
 
       storeMeasuringDevices.saveDevice({
         device: storeMeasuringDevices.curEditDevice,
@@ -165,6 +171,8 @@ export default {
             message: "Device has been added",
             progress: true,
           });
+
+          storeMeasuringDevices.isShowEditDialog = false;
         },
         errFunc: (err) => {
           $q.notify({
@@ -184,7 +192,6 @@ export default {
     const onUpdateDevice = async () => {
       let result_validate = await formEditDevice.value.validate();
       if (!result_validate) return;
-      storeMeasuringDevices.isShowEditDialog = false;
 
       storeMeasuringDevices.updateDevice({
         device: storeMeasuringDevices.curEditDevice,
@@ -197,6 +204,8 @@ export default {
             message: "Device has been updated",
             progress: true,
           });
+
+          storeMeasuringDevices.isShowEditDialog = false;
         },
         errFunc: (err) => {
           $q.notify({

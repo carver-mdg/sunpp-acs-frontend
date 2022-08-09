@@ -3,18 +3,17 @@
     <q-dialog
       v-model="storeWorkers.isShowEditWorkerDialog"
       persistent
+      :maximized="$q.platform.is.mobile ? true : false"
       transition-show="slide-up"
       transition-hide="slide-down"
     >
       <q-card>
-        <!-- <q-bar v-if="$q.platform.is.mobile">
-          <q-btn flat icon="close" v-close-popup />
-          <q-space />
+        <q-card-section class="row items-center no-wrap">
+          <div class="text-h6">Worker</div>
+        </q-card-section>
+        <q-separator />
 
-          <q-btn  flat icon="done" v-close-popup />
-        </q-bar> -->
-
-        <q-card-section class="row items-center">
+        <q-card-section class="row items-center justify-center">
           <div>
             <q-input
               outlined
@@ -26,7 +25,7 @@
             >
               <template v-slot:label>
                 <span class="text-weight-bold text-red">*</span>
-                <q-icon name="perm_identity" /> nameFirst
+                <q-icon name="perm_identity" /> Имя
               </template>
             </q-input>
 
@@ -40,7 +39,7 @@
             >
               <template v-slot:label>
                 <span class="text-weight-bold text-red">*</span>
-                <q-icon name="perm_identity" /> nameSecond
+                <q-icon name="perm_identity" /> Фамилия
               </template>
             </q-input>
 
@@ -54,7 +53,7 @@
             >
               <template v-slot:label>
                 <span class="text-weight-bold text-red">*</span>
-                <q-icon name="perm_identity" /> nameMiddle
+                <q-icon name="perm_identity" /> Отчество
               </template>
             </q-input>
 
@@ -68,7 +67,7 @@
             >
               <template v-slot:label>
                 <span class="text-weight-bold text-red">*</span>
-                <q-icon name="numbers" /> personnelNumber
+                <q-icon name="key" /> Табельный номер
               </template>
             </q-input>
 
@@ -81,13 +80,13 @@
               option-label="title"
               emit-value
               map-options
-              label="Select job position"
+              label="Должность"
               label-slot
               :rules="[(val) => !!val || 'Field is required']"
             >
               <template v-slot:label>
                 <span class="text-weight-bold text-red">*</span>
-                Select job position
+                Должность
               </template>
             </q-select>
 
@@ -99,7 +98,7 @@
               mask="##.##.####"
             >
               <template v-slot:label>
-                <q-icon name="calendar_today" /> Date of birth
+                <q-icon name="calendar_today" /> Дата рождения
               </template>
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
@@ -138,7 +137,7 @@
             >
               <template v-slot:label>
                 <q-icon name="edit_location" />
-                address
+                Домашний адрес
               </template>
             </q-input>
             <br />
@@ -153,7 +152,7 @@
               mask="+### ## ### ####"
             >
               <template v-slot:label>
-                <q-icon name="phone" /> phoneNumber
+                <q-icon name="phone" /> Номер телефона
               </template>
             </q-input>
           </div>
@@ -245,7 +244,6 @@ export default defineComponent({
     const onUpdateWorker = async () => {
       let result_validate = await formWorker.value.validate();
       if (!result_validate) return;
-      storeWorkers.isShowEditWorkerDialog = false;
 
       storeWorkers.updateWorker({
         okFunc: () => {
@@ -257,6 +255,8 @@ export default defineComponent({
             message: "Worker has been updated",
             progress: true,
           });
+
+          storeWorkers.isShowEditWorkerDialog = false;
         },
         errFunc: (err) => {
           $q.notify({

@@ -3,15 +3,18 @@
     <q-dialog
       v-model="storeMsp.isShowEditDialog"
       persistent
+      :maximized="$q.platform.is.mobile ? true : false"
       transition-show="slide-up"
       transition-hide="slide-down"
     >
       <q-card>
-        <q-card-section class="row items-center">
+        <q-card-section class="row items-center no-wrap">
           <div class="text-h6">МСП</div>
         </q-card-section>
+
         <q-separator />
-        <q-card-section class="row items-center">
+
+        <q-card-section class="row items-center justify-center">
           <div>
             <q-input
               outlined
@@ -56,7 +59,13 @@
               @filter="filterQselPositions"
               @update:model-value="onChangeQselPositions"
               label="Позиция"
+              reactive-rules
+              :rules="[(val) => !!val || 'Field is required']"
             >
+              <template v-slot:label>
+                <span class="text-weight-bold text-red">*</span>
+                <q-icon name="perm_identity" /> Год
+              </template>
               <template v-slot:no-option>
                 <q-item>
                   <q-item-section class="text-grey">
@@ -67,6 +76,13 @@
             </q-select>
           </div>
         </q-card-section>
+
+        <q-card-section>
+          <span class="text-weight-bold text-red">*</span>
+          Indicates required fields
+        </q-card-section>
+
+        <q-separator />
 
         <q-card-actions align="right">
           <q-btn label="Cancel" color="primary" v-close-popup />
@@ -107,7 +123,7 @@ export default defineComponent({
      */
     const filterQselPositions = (val, update, abort) => {
       update(() => {
-        if(val.length <= 0) return;
+        if (val.length <= 0) return;
 
         const needle = val.toLowerCase();
         storeMsp.curEditMspPosOptions = storePositions.positions.filter(
@@ -130,7 +146,6 @@ export default defineComponent({
     const onSaveMsp = async () => {
       let result_validate = await formEditMsp.value.validate();
       if (!result_validate) return;
-      storeMsp.isShowEditDialog = false;
 
       storeMsp.saveMsp({
         msp: storeMsp.curEditMsp,
@@ -143,6 +158,8 @@ export default defineComponent({
             message: "Msp has been added",
             progress: true,
           });
+
+          storeMsp.isShowEditDialog = false;
         },
         errFunc: (err) => {
           $q.notify({
@@ -162,7 +179,6 @@ export default defineComponent({
     const onUpdateMsp = async () => {
       let result_validate = await formEditMsp.value.validate();
       if (!result_validate) return;
-      storeMsp.isShowEditDialog = false;
 
       storeMsp.updateMsp({
         msp: storeMsp.curEditMsp,
@@ -175,6 +191,8 @@ export default defineComponent({
             message: "Msp has been updated",
             progress: true,
           });
+
+          storeMsp.isShowEditDialog = false;
         },
         errFunc: (err) => {
           $q.notify({

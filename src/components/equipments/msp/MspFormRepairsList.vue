@@ -199,7 +199,7 @@ export default defineComponent({
       storeMspRepairs.curEditRepairPosRemovedModelValue = "";
       storeMspRepairs.curEditRepairPosRemovedOptions =
         storePositions.positions.slice();
-      storeMspRepairs.curEditRepairWorkersModelValue = [];
+      storeMspRepairs.curEditRepairWorkersModelValue = null;
     };
 
     /**
