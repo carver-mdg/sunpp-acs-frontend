@@ -146,8 +146,6 @@ export default defineComponent({
      *
      */
     let onExportToExcel = () => {
-      storeMsp.msp_s;
-
       let data_export = [];
       storeMsp.msp_s.forEach((msp) => {
         data_export.push({
