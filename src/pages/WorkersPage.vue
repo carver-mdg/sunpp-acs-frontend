@@ -40,16 +40,6 @@ export default {
     const $q = useQuasar();
     const storeWorkers = useWorkersStore();
 
-    storeWorkers.loadJobPositions((err) => {
-      $q.notify({
-        color: "negative",
-        position: "top",
-        message: `Failed to load data from server: ${err}`,
-        icon: "report_problem",
-        progress: true,
-      });
-    });
-
     storeWorkers.loadWorkers((err) => {
       $q.notify({
         color: "negative",

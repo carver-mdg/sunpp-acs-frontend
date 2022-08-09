@@ -41,7 +41,7 @@ export const useWorkersStore = defineStore('workers', {
      * 
      * @param {*} errFunc 
      */
-    async loadWorkers(errFunc) {
+    async loadWorkers({ errFunc } = {}) {
       api
         .get("api/v1/workers")
         .then((response) => {
@@ -51,9 +51,11 @@ export const useWorkersStore = defineStore('workers', {
           this.workers = [];
           for (let idx in response.data)
             this.workers.push(new WorkerModel(response.data[idx]));
+
+          this.loadJobPositions({ errFunc })
         })
         .catch((err) => {
-          errFunc(err);
+          errFunc(err.response?.data?.message_error || err);
         })
     },
 
@@ -61,7 +63,7 @@ export const useWorkersStore = defineStore('workers', {
      * 
      * @param {*} errFunc 
      */
-    async loadJobPositions(errFunc) {
+    async loadJobPositions({ errFunc } = {}) {
       api
         .get("api/v1/job_positions")
         .then((response) => {
@@ -69,7 +71,7 @@ export const useWorkersStore = defineStore('workers', {
           // console.log(this.jobPositions);
         })
         .catch((err) => {
-          errFunc(err);
+          errFunc(err.response?.data?.message_error || err);
         })
     },
 
@@ -87,7 +89,7 @@ export const useWorkersStore = defineStore('workers', {
           okFunc()
         })
         .catch((err) => {
-          errFunc(err);
+          errFunc(err.response?.data?.message_error || err);
         })
     },
 
@@ -111,7 +113,7 @@ export const useWorkersStore = defineStore('workers', {
           okFunc();
         })
         .catch((err) => {
-          errFunc(err);
+          errFunc(err.response?.data?.message_error || err);
         })
     },
 
@@ -130,7 +132,7 @@ export const useWorkersStore = defineStore('workers', {
           okFunc();
         })
         .catch((err) => {
-          errFunc(err);
+          errFunc(err.response?.data?.message_error || err);
         })
     },
   }

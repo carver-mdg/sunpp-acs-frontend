@@ -213,7 +213,6 @@ export default defineComponent({
     const onSaveWorker = async () => {
       let result_validate = await formWorker.value.validate();
       if (!result_validate) return;
-      storeWorkers.isShowEditWorkerDialog = false;
 
       storeWorkers.saveWorker({
         okFunc: () => {
@@ -225,6 +224,8 @@ export default defineComponent({
             message: "Worker has been added",
             progress: true,
           });
+
+          storeWorkers.isShowEditWorkerDialog = false;
         },
         errFunc: (err) => {
           $q.notify({

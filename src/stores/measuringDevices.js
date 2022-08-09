@@ -55,7 +55,7 @@ export const useMeasuringDevicesStore = defineStore('measuringDevices', {
                         this.deviceTypes.push(new MeasuringDeviceTypeModel(response.data[idx]));
                 })
                 .catch((err) => {
-                    errFunc(err.response.data.message_error || err);
+                    errFunc(err.response?.data?.message_error || err);
                 })
         },
 
@@ -74,7 +74,7 @@ export const useMeasuringDevicesStore = defineStore('measuringDevices', {
                     this.loadDeviceTypes({ errFunc });
                 })
                 .catch((err) => {
-                    errFunc(err.response.data.message_error || err);
+                    errFunc(err.response?.data?.message_error || err);
                 })
         },
 
@@ -90,7 +90,7 @@ export const useMeasuringDevicesStore = defineStore('measuringDevices', {
                     okFunc()
                 })
                 .catch((err) => {
-                    errFunc(err.response.data.message_error || err);
+                    errFunc(err.response?.data?.message_error || err);
                 })
         },
 
@@ -111,7 +111,7 @@ export const useMeasuringDevicesStore = defineStore('measuringDevices', {
                     okFunc();
                 })
                 .catch((err) => {
-                    errFunc(err.response.data.message_error || err);
+                    errFunc(err.response?.data?.message_error || err);
                 })
         },
 
@@ -130,7 +130,7 @@ export const useMeasuringDevicesStore = defineStore('measuringDevices', {
                     okFunc();
                 })
                 .catch((err) => {
-                    errFunc(err.response.data.message_error || err);
+                    errFunc(err.response?.data?.message_error || err);
                 })
         },
     }
