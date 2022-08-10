@@ -9,16 +9,7 @@
       />
     </div>
 
-    <q-page-sticky position="bottom-right" :offset="[32, 18]">
-      <q-fab icon="add" direction="up" color="accent">
-        <q-fab-action
-          color="primary"
-          icon="add"
-          label="add worker"
-          @click="onAddNewWorker"
-        />
-      </q-fab>
-    </q-page-sticky>
+    <WorkersPageStickyButton />
   </q-page>
 </template>
 
@@ -27,13 +18,14 @@ import { useQuasar } from "quasar";
 import { useWorkersStore } from "stores/workers";
 import WorkerFormEdit from "src/components/workers/WorkerFormEdit.vue";
 import WorkerItem from "components/workers/WorkerItem.vue";
-import WorkerModel from "src/models/workers/WorkerModel";
+import WorkersPageStickyButton from "components/workers/WorkersPageStickyButton.vue";
 
 export default {
   name: "WorkersPage",
   components: {
     WorkerFormEdit,
     WorkerItem,
+    WorkersPageStickyButton,
   },
 
   setup() {
@@ -50,15 +42,8 @@ export default {
       });
     });
 
-    const onAddNewWorker = () => {
-      storeWorkers.isShowEditWorkerDialog = true;
-      storeWorkers.curEditWorker = new WorkerModel();
-      storeWorkers.curEditWorkerJobPositionsValue = "";
-    };
-
     return {
       storeWorkers,
-      onAddNewWorker,
     };
   },
 };
