@@ -33,9 +33,9 @@
       />
       <q-fab-action
         color="primary"
-        icon="search"
-        label="Search"
-        @click="onSearchPosition"
+        icon="filter_alt"
+        label="Filter"
+        @click="onFilterPosition"
       />
     </q-fab>
   </q-page-sticky>
@@ -223,7 +223,7 @@ export default defineComponent({
     /**
      *
      */
-    let onSearchPosition = () => {
+    let onFilterPosition = () => {
       $q.dialog({
         title: "Search",
         message: "What to look for ?",
@@ -246,7 +246,7 @@ export default defineComponent({
       onAddNewPosition,
       onImportFromExcel,
       onExportToExcel,
-      onSearchPosition,
+      onFilterPosition,
     };
   },
 });

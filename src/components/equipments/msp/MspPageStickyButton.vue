@@ -33,9 +33,9 @@
       />
       <q-fab-action
         color="primary"
-        icon="search"
-        label="Search"
-        @click="onSearchMSP"
+        icon="filter_alt"
+        label="Filter"
+        @click="onFilterMSP"
       />
     </q-fab>
   </q-page-sticky>
@@ -193,7 +193,7 @@ export default defineComponent({
     /**
      *
      */
-    let onSearchMSP = () => {
+    let onFilterMSP = () => {
       $q.dialog({
         title: "Search",
         message: "What to look for ?",
@@ -216,7 +216,7 @@ export default defineComponent({
       onAddNewMSP,
       onImportFromExcel,
       onExportToExcel,
-      onSearchMSP,
+      onFilterMSP,
     };
   },
 });

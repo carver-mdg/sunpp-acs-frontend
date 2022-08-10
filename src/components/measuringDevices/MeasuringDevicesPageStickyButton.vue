@@ -33,9 +33,9 @@
       />
       <q-fab-action
         color="primary"
-        icon="search"
-        label="Search"
-        @click="onSearchMeasuringDevice"
+        icon="filter_alt"
+        label="Filter"
+        @click="onFilterMeasuringDevice"
       />
     </q-fab>
   </q-page-sticky>
@@ -200,7 +200,7 @@ export default {
     /**
      *
      */
-    const onSearchMeasuringDevice = () => {
+    const onFilterMeasuringDevice = () => {
       $q.dialog({
         title: "Search",
         message: "What to look for ?",
@@ -223,7 +223,7 @@ export default {
       onAddNewMeasuringDevice,
       onImportFromExcel,
       onExportToExcel,
-      onSearchMeasuringDevice,
+      onFilterMeasuringDevice,
     };
   },
 };
