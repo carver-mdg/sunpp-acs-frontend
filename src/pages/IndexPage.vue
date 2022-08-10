@@ -13,6 +13,8 @@
       style="max-width: 300px"
       @update:model-value="onPickFile"
     />
+
+    <SimpleGallery :galleryID="galleryID" :images="images" />
   </q-page>
 </template>
 
@@ -20,12 +22,17 @@
 import { useQuasar } from "quasar";
 import { defineComponent, ref } from "vue";
 import { usePositionsStore } from "stores/positions";
+import SimpleGallery from "src/components/SimpleGallery.vue";
 import { axios } from "src/boot/axios";
 
 let XLSX = require("xlsx");
 
 export default defineComponent({
   name: "IndexPage",
+  components: {
+    SimpleGallery,
+  },
+
   setup() {
     const $q = useQuasar();
     const storePositions = usePositionsStore();
@@ -68,9 +75,19 @@ export default defineComponent({
       reader.readAsBinaryString(file);
     };
 
-
     return {
       file_excel: ref(null),
+      galleryID: ref("id111"),
+      images: ref([
+        {
+          largeURL:
+            "1.svg",
+            thumbnailURL: "1.svg",
+          width: 640,
+          height: 480,
+          alt: "img 1",
+        },
+      ]),
       onPickFile,
     };
   },

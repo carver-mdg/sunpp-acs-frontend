@@ -13,14 +13,24 @@ export const useMspStore = defineStore('msp', {
     curEditMspPosModelValue: null,
     curEditMspPosOptions: [],
     searchText: '',
+    searchedCount: 0,
   }),
 
   getters: {
     searchMsp: (state) => {
-      return (text) => state.msp_s.filter(msp =>
-        msp.serialNumber.toLowerCase().includes(text) ||
-        msp.yearManufacture.toString().toLowerCase().includes(text) ||
-        storePositions.getPositionById(msp.fkPosInstalledId)?.pos.toLowerCase().includes(text))
+      return (text) => {
+        let mspFiltered = state.msp_s.filter(msp => {
+          let searchText = text.toLowerCase();
+          if (
+            msp.serialNumber.toLowerCase().includes(searchText) ||
+            msp.yearManufacture.toString().toLowerCase().includes(searchText) ||
+            storePositions.getPositionById(msp.fkPosInstalledId)?.pos.toLowerCase().includes(searchText)
+          ) return true;
+        })
+
+        state.searchedCount = mspFiltered.length;
+        return mspFiltered;
+      }
     },
 
     getMspIdxArrById: (state) => {

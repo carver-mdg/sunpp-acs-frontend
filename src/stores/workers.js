@@ -22,6 +22,14 @@ export const useWorkersStore = defineStore('workers', {
       }
     },
 
+    getWorkerById: (state) => {
+      return (id) => state.workers.find((worker) => worker.id == id);
+    },
+
+    getWorkerByNameSecond: (state) => {
+      return (nameSecond) => state.workers.find((worker) => worker.nameSecond == nameSecond);
+    },
+
     getJobPositionById: (state) => {
       return (id) => state.jobPositions.find((jobPos) => jobPos.id == id);
     },
@@ -45,9 +53,6 @@ export const useWorkersStore = defineStore('workers', {
       api
         .get("api/v1/workers")
         .then((response) => {
-          // this.workers = response.data;
-          // console.log(this.workers);
-
           this.workers = [];
           for (let idx in response.data)
             this.workers.push(new WorkerModel(response.data[idx]));

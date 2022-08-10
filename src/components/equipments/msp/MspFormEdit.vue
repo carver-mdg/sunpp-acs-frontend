@@ -64,7 +64,7 @@
             >
               <template v-slot:label>
                 <span class="text-weight-bold text-red">*</span>
-                <q-icon name="perm_identity" /> Год
+                <q-icon name="perm_identity" /> Позиция
               </template>
               <template v-slot:no-option>
                 <q-item>

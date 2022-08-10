@@ -1,4 +1,11 @@
 <template>
+  <div
+    class="fixed-bottom text-center text-weight-bold text-orange-14"
+    v-if="storeMeasuringDevices.searchText"
+  >
+    Finded: {{ storeMeasuringDevices.searchedCount }} records
+  </div>
+
   <q-page-sticky position="bottom-right" :offset="[32, 18]">
     <q-fab
       icon="keyboard_arrow_up"

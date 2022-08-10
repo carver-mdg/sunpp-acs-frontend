@@ -1,4 +1,11 @@
 <template>
+  <div
+    class="fixed-bottom text-center text-weight-bold text-orange-14"
+    v-if="storeMsp.searchText"
+  >
+    Finded: {{ storeMsp.searchedCount }} records
+  </div>
+
   <q-page-sticky position="bottom-right" :offset="[32, 18]">
     <q-fab
       icon="keyboard_arrow_up"
@@ -39,7 +46,7 @@ import { useQuasar } from "quasar";
 import { defineComponent, ref } from "vue";
 import { useMspStore } from "stores/equipments/msp/msp";
 import { usePositionsStore } from "stores/positions";
-import MspModel from "../../../models/equipments/msp/MspModel";
+import MspModel from "src/models/equipments/msp/MspModel";
 import * as xlsx from "xlsx";
 
 export default defineComponent({
@@ -99,7 +106,7 @@ export default defineComponent({
                 msp: new MspModel({
                   serialNumber: row["Номер"],
                   yearManufacture: row["Год"].replaceAll("-", "."),
-                  fkPosInstalledId: storePositions.getIdByPosition(
+                  fkPosInstalledId: storePositions.getPositionByPositionName(
                     row["Позиция"]
                   )?.id,
                 }),
@@ -171,7 +178,9 @@ export default defineComponent({
       for (let i = 0; i < xlsbin.length; i++) {
         array[i] = xlsbin.charCodeAt(i) & 0xff;
       }
-      let xlsblob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+      let xlsblob = new Blob([buffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
 
       let url = window.URL.createObjectURL(xlsblob);
       let anchor = document.createElement("a");

@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { api } from "boot/axios";
-// import MeasuringDeviceModel from "../models/MeasuringDevice/MeasuringDeviceModel";
 import MeasuringDeviceModel from "src/models/MeasuringDevice/MeasuringDeviceModel";
 import MeasuringDeviceTypeModel from "src/models/MeasuringDevice/MeasuringDeviceTypeModel";
 
@@ -12,7 +11,8 @@ export const useMeasuringDevicesStore = defineStore('measuringDevices', {
         curEditDevice: null,
         curEditDeviceTypeModelValue: null,
         curEditDeviceTypeOptions: [],
-        searchText: ''
+        searchText: '',
+        searchedCount: 0,
     }),
 
     getters: {
@@ -25,10 +25,18 @@ export const useMeasuringDevicesStore = defineStore('measuringDevices', {
         },
 
         searchDevices: (state) => {
-            return (text) => state.devices.filter(device =>
-                device.model.toLowerCase().includes(text) ||
-                device.serialNumber.toString().toLowerCase().includes(text) ||
-                state.getDeviceTypeById(device.fkDeviceTypeId)?.name.toLowerCase().includes(text))
+            return (text) => {
+                let devicesFiltered = state.devices.filter(device => {
+                    let searchText = text.toLowerCase();
+                    if (
+                        device.model.toLowerCase().includes(searchText) ||
+                        device.serialNumber.toString().toLowerCase().includes(searchText) ||
+                        state.getDeviceTypeById(device.fkDeviceTypeId)?.name.toLowerCase().includes(searchText)
+                    ) return true;
+                })
+                state.searchedCount = devicesFiltered.length;
+                return devicesFiltered;
+            }
         },
 
         getDeviceIdxArrById: (state) => {
