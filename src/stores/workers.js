@@ -73,7 +73,6 @@ export const useWorkersStore = defineStore('workers', {
         .get("api/v1/job_positions")
         .then((response) => {
           this.jobPositions = response.data;
-          // console.log(this.jobPositions);
         })
         .catch((err) => {
           errFunc(err.response?.data?.message_error || err);
@@ -104,7 +103,6 @@ export const useWorkersStore = defineStore('workers', {
      */
     async updateWorker({ okFunc, errFunc } = {}) {
       this.curEditWorker.fk_job_position = this.curEditWorkerJobPositionsValue;
-      console.log(this.curEditWorker);
 
       api
         .put(`api/v1/workers/${this.curEditWorker.id}`, this.curEditWorker)
