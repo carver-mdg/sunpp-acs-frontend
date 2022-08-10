@@ -22,15 +22,15 @@ export const usePositionsStore = defineStore('positions', {
           let worker = storeWorkers.getWorkerById(position.fkManagerId);
 
           if (
-            position.pos.toLowerCase().includes(text.toLowerCase()) ||
-            position.unitNum.toString().toLowerCase().includes(text.toLowerCase()) ||
-            position.systemSecurity.toString().toLowerCase().includes(text.toLowerCase()) ||
-            position.rtzo_sher.toString().toLowerCase().includes(text.toLowerCase()) ||
-            position.descShort.toString().toLowerCase().includes(text.toLowerCase()) ||
-            position.desc.toString().toLowerCase().includes(text.toLowerCase()) ||
-            position.zoneLocation.toString().toLowerCase().includes(text.toLowerCase()) ||
-            position.cabinetRemoteControl.toString().toLowerCase().includes(text.toLowerCase()) ||
-            position.cabinetCurrentDistributor.toString().toLowerCase().includes(text.toLowerCase()) ||
+            position.pos?.toLowerCase().includes(text.toLowerCase()) ||
+            position.unitNum?.toString().toLowerCase().includes(text.toLowerCase()) ||
+            position.systemSecurity?.toString().toLowerCase().includes(text.toLowerCase()) ||
+            position.rtzo_sher?.toString().toLowerCase().includes(text.toLowerCase()) ||
+            position.descShort?.toString().toLowerCase().includes(text.toLowerCase()) ||
+            position.desc?.toString().toLowerCase().includes(text.toLowerCase()) ||
+            position.zoneLocation?.toString().toLowerCase().includes(text.toLowerCase()) ||
+            position.cabinetRemoteControl?.toString().toLowerCase().includes(text.toLowerCase()) ||
+            position.cabinetCurrentDistributor?.toString().toLowerCase().includes(text.toLowerCase()) ||
             worker?.nameFirst.toLowerCase().includes(text.toLowerCase()) ||
             worker?.nameSecond.toLowerCase().includes(text.toLowerCase()) ||
             worker?.nameMiddle.toLowerCase().includes(text.toLowerCase())
