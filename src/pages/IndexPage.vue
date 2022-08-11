@@ -1,11 +1,5 @@
 <template>
-  <q-page class="flex flex-center">
-    <img
-      alt="Quasar logo"
-      src="~assets/quasar-logo-vertical.svg"
-      style="width: 200px; height: 200px"
-    />
-
+  <q-page>
     <q-file
       v-model="file_excel"
       label="Pick one file"
@@ -14,7 +8,17 @@
       @update:model-value="onPickFile"
     />
 
-    <SimpleGallery :galleryID="galleryID" :images="images" />
+    <div style="max-width: 500px; overflow: scroll;">
+      <SimpleGallery :galleryID="galleryID" :images="images" />
+    </div>
+
+    <div >
+      <apexchart
+        type="line"
+        :options="options"
+        :series="series"
+      ></apexchart>
+    </div>
   </q-page>
 </template>
 
@@ -23,6 +27,7 @@ import { useQuasar } from "quasar";
 import { defineComponent, ref } from "vue";
 import { usePositionsStore } from "stores/positions";
 import SimpleGallery from "src/components/SimpleGallery.vue";
+// import VueApexCharts from "vue3-apexcharts";
 import { axios } from "src/boot/axios";
 
 let XLSX = require("xlsx");
@@ -75,19 +80,38 @@ export default defineComponent({
       reader.readAsBinaryString(file);
     };
 
+    let images = ref([]);
+    for (let i = 0; i < 10; i++) {
+      images.value.push({
+        largeURL: `https://placeimg.com/500/300/nature?t=${i}`,
+        thumbnailURL: `https://placeimg.com/500/300/nature?t=${i}`,
+        width: 500,
+        height: 300,
+        alt: `image ${i}`,
+      });
+    }
+
+    let options = ref({
+      chart: {
+        id: "vuechart-example",
+      },
+      xaxis: {
+        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998],
+      },
+    });
+    let series = ref([
+      {
+        name: "series-1",
+        data: [30, 40, 45, 50, 49, 60, 70, 91],
+      },
+    ]);
+
     return {
       file_excel: ref(null),
       galleryID: ref("id111"),
-      images: ref([
-        {
-          largeURL:
-            "1.svg",
-            thumbnailURL: "1.svg",
-          width: 640,
-          height: 480,
-          alt: "img 1",
-        },
-      ]),
+      images,
+      options,
+      series,
       onPickFile,
     };
   },
