@@ -84,7 +84,7 @@ export const useWorkersStore = defineStore('workers', {
      * 
      */
     async saveWorker({ okFunc, errFunc } = {}) {
-      this.curEditWorker.fk_job_position = this.curEditWorkerJobPositionsValue;
+      this.curEditWorker.fkJobPositionId = this.curEditWorkerJobPositionsValue;
 
       api
         .post("api/v1/workers", this.curEditWorker)
@@ -102,7 +102,7 @@ export const useWorkersStore = defineStore('workers', {
      * 
      */
     async updateWorker({ okFunc, errFunc } = {}) {
-      this.curEditWorker.fk_job_position = this.curEditWorkerJobPositionsValue;
+      this.curEditWorker.fkJobPositionId = this.curEditWorkerJobPositionsValue;
 
       api
         .put(`api/v1/workers/${this.curEditWorker.id}`, this.curEditWorker)

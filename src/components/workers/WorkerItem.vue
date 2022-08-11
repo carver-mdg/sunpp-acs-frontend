@@ -61,7 +61,7 @@
 
       <div class="text-caption text-grey-6">Должность</div>
       <div class="text-body2">
-        {{ storeWorkers.getJobPositionById(worker.fk_job_position)?.title }}
+        {{ storeWorkers.getJobPositionById(worker.fkJobPositionId)?.name }}
       </div>
 
       <div class="text-caption text-grey-6">Адрес</div>
@@ -97,7 +97,7 @@ export default defineComponent({
     const onEditWorker = (worker) => {
       storeWorkers.isShowEditWorkerDialog = true;
       storeWorkers.curEditWorker = Object.assign({}, worker);
-      storeWorkers.curEditWorkerJobPositionsValue = worker.fk_job_position;
+      storeWorkers.curEditWorkerJobPositionsValue = worker.fkJobPositionId;
     };
 
     const onDeleteWorker = (id) => {
