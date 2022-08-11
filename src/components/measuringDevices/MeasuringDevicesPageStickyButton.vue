@@ -91,6 +91,7 @@ export default {
             let json = xlsx.utils.sheet_to_json(workbook.Sheets["СИТ"], {
               raw: false,
               dateNF: "dd-mm-yyyy",
+              defval: "",
             });
 
             json.forEach((row) => {

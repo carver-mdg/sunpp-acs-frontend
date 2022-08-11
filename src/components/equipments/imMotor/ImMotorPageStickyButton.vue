@@ -92,6 +92,7 @@ export default defineComponent({
             let json = xlsx.utils.sheet_to_json(workbook.Sheets["им.Мотор"], {
               raw: false,
               dateNF: "dd-mm-yyyy",
+              defval: "",
             });
 
             json.forEach((row) => {
