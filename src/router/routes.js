@@ -15,7 +15,7 @@ const routes = [
       { path: 'equipments/msp', component: () => import('pages/Equipments/MspPage.vue'), meta: { title: "Equipments МСП" } },
       // { path: 'equipments/pbr2', component: () => import('pages/Equipments/Pbr2Page.vue'), meta: { title: "Equipments ПБР-2" } },
       // { path: 'equipments/pbr3', component: () => import('pages/Equipments/Pbr3Page.vue'), meta: { title: "Equipments ПБР-3" } },
-      // { path: 'equipments/im_meo', component: () => import('pages/Equipments/ImMeoPage.vue'), meta: { title: "Equipments МЭО" } },
+      { path: 'equipments/im_meo', component: () => import('pages/Equipments/ImMeoPage.vue'), meta: { title: "Equipments МЭО" } },
       { path: 'equipments/im_motor', component: () => import('pages/Equipments/ImMotorPage.vue'), meta: { title: "Equipments Эл. Мотор" } },
       // repairs
       { path: 'measuring_devices', component: () => import('src/pages/MeasuringDevicesPage.vue'), meta: { title: "Measuring Devices" } },
