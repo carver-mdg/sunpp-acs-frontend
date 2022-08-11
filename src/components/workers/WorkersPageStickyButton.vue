@@ -1,11 +1,4 @@
 <template>
-  <!-- <div
-    class="fixed-bottom text-center text-weight-bold text-orange-14"
-    v-if="storeWorkers.searchText"
-  >
-    Finded: {{ storeWorkers.searchedCount }} records
-  </div> -->
-
   <q-page-sticky position="bottom-right" :offset="[32, 18]">
     <q-fab
       icon="keyboard_arrow_up"
@@ -64,7 +57,7 @@ export default defineComponent({
     const onAddNewWorker = () => {
       storeWorkers.isShowEditWorkerDialog = true;
       storeWorkers.curEditWorker = new WorkerModel();
-      storeWorkers.curEditWorkerJobPositionsValue = "";
+      storeWorkers.curEditWorkerJobPositionsValue = null;
     };
 
     /**
