@@ -19,6 +19,14 @@
             <q-input
               outlined
               clearable
+              v-model="storeMsp.curEditMsp.mspModel"
+              label="Модель"
+            />
+            <br />
+
+            <q-input
+              outlined
+              clearable
               v-model="storeMsp.curEditMsp.serialNumber"
               label-slot
               reactive-rules

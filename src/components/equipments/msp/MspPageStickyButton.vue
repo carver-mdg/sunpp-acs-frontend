@@ -95,6 +95,8 @@ export default defineComponent({
             });
 
             json.forEach((row) => {
+              if (!row.hasOwnProperty("Модель"))
+                throw "В файле не найдена колонка 'Модель'";
               if (!row.hasOwnProperty("Номер"))
                 throw "В файле не найдена колонка 'Номер'";
               if (!row.hasOwnProperty("Год"))
@@ -104,6 +106,7 @@ export default defineComponent({
 
               storeMsp.saveMsp({
                 msp: new MspModel({
+                  mspModel: row["Модель"],
                   serialNumber: row["Номер"],
                   yearManufacture: row["Год"].replaceAll("-", "."),
                   fkPosInstalledId: storePositions.getPositionByPositionName(
@@ -157,6 +160,7 @@ export default defineComponent({
       let data_export = [];
       storeMsp.msp_s.forEach((msp) => {
         data_export.push({
+          Модель: msp?.mspModel,
           Номер: msp?.serialNumber,
           Год: msp.yearManufacture,
           Позиция: storePositions.getPositionById(msp?.fkPosInstalledId)?.pos,

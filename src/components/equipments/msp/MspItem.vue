@@ -46,6 +46,9 @@
     <q-separator />
 
     <q-card-section>
+      <div class="text-caption text-grey-6">Модель</div>
+      <div class="text-body2">{{ msp.mspModel || "-" }}</div>
+
       <div class="text-caption text-grey-6">Номер</div>
       <div class="text-body2">{{ msp.serialNumber || "-" }}</div>
 
