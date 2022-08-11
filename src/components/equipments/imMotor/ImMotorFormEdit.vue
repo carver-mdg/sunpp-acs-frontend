@@ -97,7 +97,7 @@
               map-options
               @filter="filterQselPositions"
               @update:model-value="onChangeQselPositions"
-              label="Позиция"
+              label-slot
               reactive-rules
               :rules="[(val) => !!val || 'Field is required']"
             >

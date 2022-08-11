@@ -30,7 +30,7 @@
               :rules="[(val) => !!val || 'Field is required']"
               emit-value
               map-options
-              label="Тип устройства"
+              label-slot
             >
               <template v-slot:label>
                 <span class="text-weight-bold text-red">*</span>

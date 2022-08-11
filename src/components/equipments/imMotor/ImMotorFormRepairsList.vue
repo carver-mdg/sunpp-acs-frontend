@@ -26,15 +26,7 @@
       </q-card-section>
       <q-separator />
 
-      <!-- <q-card-section class="row items-center">
-        <q-btn label="Add" color="positive" @click="onAddNewRepair" />
-      </q-card-section>
-      <q-separator /> -->
-
-      <!-- <q-card-section style="max-height: 55vh" class="scroll"> -->
       <q-card-section class="scroll">
-        <!-- <q-card-section class="row items-center"> -->
-        <!-- <div class="column full-height"> -->
         <q-table
           title="Treats"
           :rows="storeImMotorRepairs.repairs"
@@ -82,7 +74,6 @@
             </q-tr>
           </template>
         </q-table>
-        <!-- </div> -->
       </q-card-section>
     </q-card>
   </q-dialog>
@@ -95,7 +86,6 @@ import { useImMotorRepairsStore } from "stores/equipments/imMotor/imMotorRepairs
 import { usePositionsStore } from "stores/positions";
 import { useWorkersStore } from "stores/workers";
 import ImMotorRepairModel from "src/models/equipments/imMotor/ImMotorRepairModel";
-import WorkerModel from "src/models/workers/WorkerModel";
 
 export default defineComponent({
   name: "ImMotorFormRepairsList",

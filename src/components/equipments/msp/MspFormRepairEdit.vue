@@ -29,7 +29,7 @@
               option-label="name"
               emit-value
               map-options
-              label="Тип ремонта"
+              label-slot
             >
               <template v-slot:label>
                 <span class="text-weight-bold text-red">*</span>
@@ -52,7 +52,7 @@
               :rules="[(val) => !!val || 'Field is required']"
               @filter="filterQselPositionsRemoved"
               @update:model-value="onChangeQselPositionsRemoved"
-              label="Позиция демонтажа"
+              label-slot
             >
               <template v-slot:label>
                 <span class="text-weight-bold text-red">*</span>
@@ -83,7 +83,7 @@
               :rules="[(val) => !!val || 'Field is required']"
               @filter="filterQselPositionsInstalled"
               @update:model-value="onChangeQselPositionsInstalled"
-              label="Позиция установки"
+              label-slot
             >
               <template v-slot:label>
                 <span class="text-weight-bold text-red">*</span>
@@ -125,7 +125,7 @@
                 clearable
                 type="number"
                 v-model="storeMspRepairs.curEditRepair.ro_8_7"
-                label="ro_8_7 (Ом)"
+                label-slot
                 :rules="[
                   (val) =>
                     (val >= 93 - 12 && val <= 93 + 12) ||
@@ -134,6 +134,10 @@
                     } Ом`,
                 ]"
               >
+                <template v-slot:label>
+                  <span class="text-weight-bold text-red">*</span>
+                  ro_8_7 (Ом)
+                </template>
                 <q-tooltip>
                   {{
                     `Сопротивление катушки индуктивности от ${93 - 12} Ом до ${
@@ -148,7 +152,7 @@
                 clearable
                 type="number"
                 v-model="storeMspRepairs.curEditRepair.ro_8_9"
-                label="ro_8_9 (Ом)"
+                label-slot
                 :rules="[
                   (val) =>
                     (val >= 93 - 12 && val <= 93 + 12) ||
@@ -157,6 +161,10 @@
                     } Ом`,
                 ]"
               >
+                <template v-slot:label>
+                  <span class="text-weight-bold text-red">*</span>
+                  ro_8_9 (Ом)
+                </template>
                 <q-tooltip>
                   {{
                     `Сопротивление катушки индуктивности от ${93 - 12} Ом до ${
@@ -171,7 +179,7 @@
                 clearable
                 type="number"
                 v-model="storeMspRepairs.curEditRepair.voltage"
-                label="Напряжение питания (В)"
+                label-slot
                 :rules="[
                   (val) =>
                     (val >= 187 && val <= 242) ||
@@ -179,6 +187,10 @@
                 ]"
                 @update:model-value="onChangeVoltage"
               >
+                <template v-slot:label>
+                  <span class="text-weight-bold text-red">*</span>
+                  Напряжение питания (В)
+                </template>
                 <q-tooltip>
                   {{ `Напряжение питания должно быть от 187 В до 242 В` }}
                 </q-tooltip>
@@ -189,7 +201,7 @@
                 clearable
                 type="number"
                 v-model="storeMspRepairs.curEditRepair.current"
-                label="Потребляемый ток (мА)"
+                label-slot
                 :rules="[
                   (val) =>
                     (val >= 37 && val <= 48) ||
@@ -197,6 +209,10 @@
                 ]"
                 @update:model-value="onChangeCurrent"
               >
+                <template v-slot:label>
+                  <span class="text-weight-bold text-red">*</span>
+                  Потребляемый ток (мА)
+                </template>
                 <q-tooltip>
                   {{ `Потребляемый ток должнен быть от 37 мА до 48 мА` }}
                 </q-tooltip>
@@ -208,12 +224,16 @@
                 readonly
                 type="number"
                 v-model="storeMspRepairs.curEditRepair.power"
-                label="Потребляемая мощность (ВА)"
+                label-slot
                 :rules="[
                   (val) =>
                     val <= 9 || 'Потребляемая мощность должна быть ≤ 9 ВА',
                 ]"
               >
+                <template v-slot:label>
+                  <span class="text-weight-bold text-red">*</span>
+                  Потребляемая мощность (ВА)
+                </template>
                 <q-tooltip>
                   {{ `Потребляемая мощность должна быть ≤ 9 ВА` }}
                 </q-tooltip>
@@ -286,7 +306,7 @@
               map-options
               reactive-rules
               :rules="[(val) => !!val || 'Field is required']"
-              label="Исполнители"
+              label-slot
             >
               <template v-slot:label>
                 <span class="text-weight-bold text-red">*</span>
