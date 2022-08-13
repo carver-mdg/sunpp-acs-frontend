@@ -64,7 +64,7 @@
               outlined
               clearable
               v-model="storePositions.curEditPosition.zoneLocation"
-              :options="['Машинный зал', 'Зона']"
+              :options="['Машинный зал', 'Реакторное отделение']"
               label-slot
               reactive-rules
               :rules="[(val) => !!val || 'Field is required']"
