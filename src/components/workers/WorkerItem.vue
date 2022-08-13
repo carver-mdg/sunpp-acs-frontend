@@ -1,5 +1,28 @@
 <template>
   <q-card class="bg-grey-1 col-2 self-start" style="width: 180px">
+    <!-- <q-card-section>
+      <q-scroll-area style="height: 150px; max-width: 300px">
+        <div class="row no-wrap">
+          <q-img
+            src="https://placeimg.com/500/300/nature?t=1"
+            style="width: 150px; margin: 5px;" class="q-pa-md"
+            fit="contain"
+          />
+          <q-img
+            src="https://placeimg.com/500/300/nature?t=2"
+            style="width: 150px; margin: 5px;" class="q-pa-md"
+            fit="contain"
+          />
+          <q-img
+            src="https://placeimg.com/500/300/nature?t=3"
+            style="width: 150px; margin: 5px;" class="q-pa-md"
+            fit="contain"
+          />
+        </div>
+      </q-scroll-area>
+    </q-card-section>
+    <q-separator /> -->
+
     <q-card-section>
       <div class="row items-center no-wrap">
         <div class="col">
@@ -12,8 +35,8 @@
         <div class="col-auto">
           <q-btn color="grey-7" round flat icon="more_vert">
             <q-menu cover auto-close>
-              <q-list>
-                <q-item clickable @click="onEditWorker(worker)">
+              <q-list style="min-width: 200px">
+                <q-item clickable @click="onClickItemEditWorker(worker)">
                   <q-item-section>
                     <div class="row items-center">
                       <q-icon name="edit" class="col" />
@@ -29,7 +52,23 @@
                     </div>
                   </q-item-section>
                 </q-item>
-                <q-item clickable @click="onDeleteWorker(worker.id)">
+                <q-item clickable disable>
+                  <q-item-section>
+                    <div class="row items-center">
+                      <q-icon name="liquor" class="col" />
+                      <div class="col">Отпуска</div>
+                    </div>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable disable>
+                  <q-item-section>
+                    <div class="row items-center">
+                      <q-icon name="home_repair_service" class="col" />
+                      <div class="col">Инструменты</div>
+                    </div>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable @click="onClickItemDeleteWorker(worker.id)">
                   <q-item-section>
                     <div class="row items-center text-negative">
                       <q-icon name="delete" class="col" />
@@ -45,6 +84,20 @@
     </q-card-section>
 
     <q-separator />
+
+    <q-card-section v-if="worker.photos.length">
+      <SimpleGallery
+        :galleryID="`workerItemGalleryID-${worker.id}`"
+        :images="worker.photos"
+        :imagesBindingNames="{
+          imageUrl: 'workerPhotoUrl',
+          imageThumbnailUrl: 'workerPhotoThumbnailUrl',
+          imageWidth: 'workerPhotoWidth',
+          imageHeight: 'workerPhotoHeight',
+        }"
+      />
+    </q-card-section>
+    <q-separator v-if="worker.photos.length" />
 
     <q-card-section>
       <div class="text-caption text-grey-6">Имя</div>
@@ -78,11 +131,17 @@
 
 <script>
 import { useQuasar } from "quasar";
-import { defineComponent, ref } from "vue";
+import { defineComponent, defineAsyncComponent, ref } from "vue";
 import { useWorkersStore } from "stores/workers";
+// import SimpleGallery from "src/components/SimpleGallery.vue";
 
 export default defineComponent({
   name: "WorkerItem",
+  components: {
+    // SimpleGallery,
+    SimpleGallery: defineAsyncComponent(() => import('src/components/SimpleGallery.vue')),
+  },
+
   props: {
     worker: {
       type: Object,
@@ -94,13 +153,17 @@ export default defineComponent({
     const $q = useQuasar();
     const storeWorkers = useWorkersStore();
 
-    const onEditWorker = (worker) => {
+    const onClickItemEditWorker = (worker) => {
       storeWorkers.isShowEditWorkerDialog = true;
       storeWorkers.curEditWorker = Object.assign({}, worker);
       storeWorkers.curEditWorkerJobPositionsValue = worker.fkJobPositionId;
+      storeWorkers.curEditWorker.photos = Object.assign(
+        [],
+        worker.photos
+      );
     };
 
-    const onDeleteWorker = (id) => {
+    const onClickItemDeleteWorker = (id) => {
       $q.dialog({
         title: "Delete worker",
         message: `Are you sure you want to permanently 
@@ -141,8 +204,8 @@ export default defineComponent({
 
     return {
       storeWorkers,
-      onEditWorker,
-      onDeleteWorker,
+      onClickItemEditWorker,
+      onClickItemDeleteWorker,
     };
   },
 });

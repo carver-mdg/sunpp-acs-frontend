@@ -13,6 +13,35 @@
         </q-card-section>
         <q-separator />
 
+        <q-card-section>
+          <SimpleGallery
+            :galleryID="`formEditGalleryID-${storeWorkers.curEditWorker.id}`"
+            :images="storeWorkers.curEditWorker.photos"
+            :imagesBindingNames="{
+              imageUrl: 'workerPhotoUrl',
+              imageThumbnailUrl: 'workerPhotoThumbnailUrl',
+              imageWidth: 'workerPhotoWidth',
+              imageHeight: 'workerPhotoHeight',
+            }"
+            btnDelete
+            :onClickBtnDelete="onClickGalleryBtnDelete"
+          />
+
+          <q-btn
+            flat
+            icon="add_a_photo"
+            color="primary"
+            @click="onClickBtnCreatePhoto"
+          />
+          <q-btn
+            flat
+            icon="add_photo_alternate"
+            color="primary"
+            @click="onClickBtnUpLoadPhotoFiles"
+          />
+        </q-card-section>
+        <q-separator />
+
         <q-card-section class="row items-center justify-center">
           <div>
             <q-input
@@ -165,15 +194,20 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn label="Cancel" color="primary" v-close-popup />
+          <q-btn label="Cancel" color="primary" @click="onClickBtnCancel" />
           <q-btn
             v-if="storeWorkers.curEditWorker.id"
             label="Update"
             color="amber-14"
             text-color="black"
-            @click="onUpdateWorker"
+            @click="onClickBtnUpdateWorker"
           />
-          <q-btn v-else label="Save" color="positive" @click="onSaveWorker" />
+          <q-btn
+            v-else
+            label="Save"
+            color="positive"
+            @click="onClickBtnSaveWorker"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -182,11 +216,20 @@
 
 <script>
 import { useQuasar } from "quasar";
-import { defineComponent, ref } from "vue";
+import { defineComponent, defineAsyncComponent, ref } from "vue";
 import { useWorkersStore } from "stores/workers";
+// import SimpleGallery from "src/components/SimpleGallery.vue";
+import WorkerPhotoModel from "src/models/workers/WorkerPhotoModel";
+import { api } from "boot/axios";
 
 export default defineComponent({
   name: "WorkerFormEdit",
+  components: {
+    // SimpleGallery,
+    SimpleGallery: defineAsyncComponent(() =>
+      import("src/components/SimpleGallery.vue")
+    ),
+  },
 
   setup(props) {
     const $q = useQuasar();
@@ -196,11 +239,54 @@ export default defineComponent({
     /**
      *
      */
-    const onSaveWorker = async () => {
+    const onClickGalleryBtnDelete = async (photoObj) => {
+      $q.dialog({
+        title: "Delete worker photo",
+        message: `Are you sure you want to delete photo ?`,
+        cancel: true,
+        persistent: true,
+      })
+        .onOk(() => {
+          if (!photoObj.id.startsWith("genClient-"))
+            storeWorkers.curEditWorkerPhotosTaggedDeleted.push(photoObj);
+
+          storeWorkers.curEditWorker.photos =
+            storeWorkers.curEditWorker.photos.filter(
+              (workerPhoto) => workerPhoto.id != photoObj.id
+            );
+        })
+        .onCancel(() => {});
+    };
+
+    /**
+     *
+     */
+    const onClickBtnSaveWorker = async () => {
       let result_validate = await formWorker.value.validate();
       if (!result_validate) return;
 
+      const notif = $q.notify({
+        group: false,
+        timeout: 0,
+        spinner: true,
+        message: "Saving...",
+      });
+
       storeWorkers.saveWorker({
+        onUploadProgressFunc: (percentage) => {
+          notif({
+            caption: `${percentage} %`,
+          });
+
+          if (percentage >= 100) {
+            notif({
+              icon: "done",
+              spinner: false,
+              message: "Uploading done!",
+              timeout: 300,
+            });
+          }
+        },
         okFunc: () => {
           $q.notify({
             color: "green-4",
@@ -212,6 +298,9 @@ export default defineComponent({
           });
 
           storeWorkers.isShowEditWorkerDialog = false;
+          notif({
+            timeout: 1,
+          });
         },
         errFunc: (err) => {
           $q.notify({
@@ -228,11 +317,42 @@ export default defineComponent({
     /**
      *
      */
-    const onUpdateWorker = async () => {
+    const onClickBtnCancel = async () => {
+      storeWorkers.isShowEditWorkerDialog = false;
+      storeWorkers.curEditWorkerPhotosTaggedDeleted = [];
+      storeWorkers.curEditWorkerPhotosTaggedUploaded = [];
+    };
+
+    /**
+     *
+     */
+    const onClickBtnUpdateWorker = async () => {
       let result_validate = await formWorker.value.validate();
       if (!result_validate) return;
 
+      const notif = $q.notify({
+        group: false,
+        timeout: 0,
+        spinner: true,
+        message: "Updating...",
+        // caption: "0%",
+      });
+
       storeWorkers.updateWorker({
+        onUploadProgressFunc: (percentage) => {
+          notif({
+            caption: `${percentage} %`,
+          });
+
+          if (percentage >= 100) {
+            notif({
+              icon: "done",
+              spinner: false,
+              message: "Uploading done!",
+              timeout: 300,
+            });
+          }
+        },
         okFunc: () => {
           $q.notify({
             color: "green-4",
@@ -244,6 +364,9 @@ export default defineComponent({
           });
 
           storeWorkers.isShowEditWorkerDialog = false;
+          notif({
+            timeout: 1,
+          });
         },
         errFunc: (err) => {
           $q.notify({
@@ -257,11 +380,72 @@ export default defineComponent({
       });
     };
 
+    /**
+     *
+     */
+    const onClickBtnCreatePhoto = async () => {};
+
+    /**
+     *
+     */
+    const onClickBtnUpLoadPhotoFiles = async () => {
+      let anchor = document.createElement("input");
+      anchor.type = "file";
+      anchor.accept = "image/png, image/gif, image/jpeg";
+      anchor.multiple = "multiple";
+      anchor.click();
+
+      anchor.onchange = function () {
+        [].forEach.call(this.files, function (file, index) {
+          var reader = new FileReader();
+          reader.onload = (function (theFile) {
+            return function (e) {
+              const imageUrl = URL.createObjectURL(theFile);
+              const image = new Image();
+              image.src = imageUrl;
+              const imageThumbnailUrl = imageUrl; //temp
+
+              image.onload = () => {
+                let workerPhotoObject = new WorkerPhotoModel({
+                  id: `genClient-${Math.random()
+                    .toString(16)
+                    .slice(2)}${Math.random().toString(16).slice(2)}`,
+                  fileNameOriginal: theFile.name,
+                  fkWorkerId: storeWorkers.curEditWorker.id,
+                  workerPhotoUrl: imageUrl,
+                  workerPhotoThumbnailUrl: imageThumbnailUrl,
+                  workerPhotoWidth: image.width,
+                  workerPhotoHeight: image.height,
+                });
+
+                let formDataFiles = new FormData();
+                formDataFiles.append("files", theFile);
+
+                storeWorkers.curEditWorkerPhotosTaggedUploaded.push({
+                  obj: workerPhotoObject,
+                  formDataFiles,
+                });
+                storeWorkers.curEditWorker.photos.push(
+                  workerPhotoObject
+                );
+              };
+            };
+          })(file);
+
+          reader.readAsBinaryString(file);
+        });
+      };
+    };
+
     return {
       formWorker,
       storeWorkers,
-      onSaveWorker,
-      onUpdateWorker,
+      onClickBtnSaveWorker,
+      onClickBtnUpdateWorker,
+      onClickBtnCreatePhoto,
+      onClickBtnUpLoadPhotoFiles,
+      onClickGalleryBtnDelete,
+      onClickBtnCancel,
     };
   },
 });

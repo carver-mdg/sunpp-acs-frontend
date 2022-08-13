@@ -8,16 +8,12 @@
       @update:model-value="onPickFile"
     />
 
-    <div style="max-width: 500px; overflow: scroll;">
+    <div style="max-width: 500px; overflow: scroll">
       <SimpleGallery :galleryID="galleryID" :images="images" />
     </div>
 
-    <div >
-      <apexchart
-        type="line"
-        :options="options"
-        :series="series"
-      ></apexchart>
+    <div style="max-width: 500px; overflow: scroll">
+      <apexchart type="line" :options="options" :series="series"></apexchart>
     </div>
   </q-page>
 </template>

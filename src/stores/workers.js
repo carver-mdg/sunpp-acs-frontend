@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { api } from "boot/axios";
-import WorkerModel from "src/models/workers/WorkerModel"
+import WorkerModel from "src/models/workers/WorkerModel";
+import WorkerPhotoModel from "src/models/workers/WorkerPhotoModel";
 
 export const useWorkersStore = defineStore('workers', {
   state: () => ({
@@ -9,6 +10,8 @@ export const useWorkersStore = defineStore('workers', {
     isShowEditWorkerDialog: false,
     curEditWorker: null,
     curEditWorkerJobPositionsValue: null,
+    curEditWorkerPhotosTaggedDeleted: [],
+    curEditWorkerPhotosTaggedUploaded: [],
   }),
 
   getters: {
@@ -64,6 +67,7 @@ export const useWorkersStore = defineStore('workers', {
         })
     },
 
+
     /**
      * 
      * @param {*} errFunc 
@@ -83,13 +87,30 @@ export const useWorkersStore = defineStore('workers', {
     /**
      * 
      */
-    async saveWorker({ okFunc, errFunc } = {}) {
+    async saveWorker({ onUploadProgressFunc, okFunc, errFunc } = {}) {
       this.curEditWorker.fkJobPositionId = this.curEditWorkerJobPositionsValue;
 
       api
         .post("api/v1/workers", this.curEditWorker)
         .then((response) => {
-          this.workers.push(response.data);
+          let newWorker = new WorkerModel(response.data);
+          this.workers.push(newWorker);
+
+          newWorker.photos = [];
+
+          // upload new photos
+          let photoObjTaggedUploadedItem = null;
+          while (photoObjTaggedUploadedItem = this.curEditWorkerPhotosTaggedUploaded.pop()) {
+            this.saveWorkerPhotoByWorkerId({
+              workerId: newWorker.id,
+              formDataFiles: photoObjTaggedUploadedItem.
+                formDataFiles, onUploadProgressFunc,
+              errFunc
+            });
+
+            newWorker.photos.push(photoObjTaggedUploadedItem.obj);
+          }
+
           okFunc()
         })
         .catch((err) => {
@@ -101,7 +122,7 @@ export const useWorkersStore = defineStore('workers', {
     /**
      * 
      */
-    async updateWorker({ okFunc, errFunc } = {}) {
+    async updateWorker({ onUploadProgressFunc, okFunc, errFunc } = {}) {
       this.curEditWorker.fkJobPositionId = this.curEditWorkerJobPositionsValue;
 
       api
@@ -113,11 +134,32 @@ export const useWorkersStore = defineStore('workers', {
 
           this.workers[found_idx] = this.curEditWorker;
 
+
+          // delete photos
+          let photoObjTaggedDeletedItem = null;
+          while (photoObjTaggedDeletedItem = this.curEditWorkerPhotosTaggedDeleted.pop()) {
+            this.deleteWorkerPhotoById({
+              worker: this.workers[found_idx],
+              photoId: photoObjTaggedDeletedItem.id,
+              errFunc
+            });
+          }
+
+          // upload new photos
+          let photoObjTaggedUploadedItem = null;
+          while (photoObjTaggedUploadedItem = this.curEditWorkerPhotosTaggedUploaded.pop()) {
+            this.saveWorkerPhotoByWorkerId({
+              workerId: this.curEditWorker.id,
+              formDataFiles: photoObjTaggedUploadedItem.
+                formDataFiles, onUploadProgressFunc,
+              errFunc
+            });
+          }
+
           okFunc();
         })
-        .catch((err) => {
-          errFunc(err.response?.data?.message_error || err);
-        })
+        .catch((err) =>
+          errFunc(err.response?.data?.message_error || err))
     },
 
 
@@ -138,5 +180,49 @@ export const useWorkersStore = defineStore('workers', {
           errFunc(err.response?.data?.message_error || err);
         })
     },
+
+
+    /**
+     * 
+     * @param {*} param0 
+     */
+    async deleteWorkerPhotoById({ worker, photoId, okFunc, errFunc } = {}) {
+      api
+        .delete(`api/v1/workers/photos/${photoId}`)
+        .then((response) => {
+          worker.photos = worker.photos.filter(workerPhoto =>
+            workerPhoto.id != photoId
+          )
+          // okFunc();
+        })
+        .catch((err) => {
+          errFunc(err.response?.data?.message_error || err);
+        })
+    },
+
+    /**
+     * 
+     */
+    async saveWorkerPhotoByWorkerId({ workerId, formDataFiles, onUploadProgressFunc, okFunc, errFunc } = {}) {
+      api
+        .post(`api/v1/workers/${workerId}/photos/`, formDataFiles, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (progressEvent) => {
+            let percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+
+            onUploadProgressFunc(percentCompleted);
+          }
+        })
+        .then((response) => {
+        })
+        .catch((err) => {
+          errFunc(err.response?.data?.message_error || err);
+        })
+    },
+
   }
 })

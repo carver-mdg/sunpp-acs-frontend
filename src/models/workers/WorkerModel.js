@@ -1,3 +1,4 @@
+import WorkerPhotoModel from "src/models/workers/WorkerPhotoModel"
 class WorkerModel {
     constructor(worker) {
         this.id = worker?.id;
@@ -9,6 +10,7 @@ class WorkerModel {
         this.address = worker?.address;
         this.phoneNumber = worker?.phoneNumber;
         this.fkJobPositionId = worker?.fkJobPositionId;
+        this.photos = worker?.photos || [];
     }
 }
 

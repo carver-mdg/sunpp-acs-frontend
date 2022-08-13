@@ -10,28 +10,28 @@
         color="primary"
         icon="add"
         label="Add new worker"
-        @click="onAddNewWorker"
+        @click="onClickFabActAddNewWorker"
       />
       <q-fab-action
         disable
         color="primary"
         icon="file_download"
         label="Import from excel"
-        @click="onImportFromExcel"
+        @click="onClickFabActImportFromExcel"
       />
       <q-fab-action
         disable
         color="primary"
         icon="file_upload"
         label="Export to excel"
-        @click="onExportToExcel"
+        @click="onClickFabActExportToExcel"
       />
       <q-fab-action
         disable
         color="primary"
         icon="filter_alt"
         label="Filter"
-        @click="onFilterWorkers"
+        @click="onClickFabActFilterWorkers"
       />
     </q-fab>
   </q-page-sticky>
@@ -54,7 +54,7 @@ export default defineComponent({
     /**
      *
      */
-    const onAddNewWorker = () => {
+    const onClickFabActAddNewWorker = () => {
       storeWorkers.isShowEditWorkerDialog = true;
       storeWorkers.curEditWorker = new WorkerModel();
       storeWorkers.curEditWorkerJobPositionsValue = null;
@@ -63,24 +63,24 @@ export default defineComponent({
     /**
      *
      */
-    const onImportFromExcel = () => {};
+    const onClickFabActImportFromExcel = () => {};
 
     /**
      *
      */
-    const onExportToExcel = () => {};
+    const onClickFabActExportToExcel = () => {};
 
     /**
      *
      */
-    const onFilterWorkers = () => {};
+    const onClickFabActFilterWorkers = () => {};
 
     return {
       storeWorkers,
-      onAddNewWorker,
-      onImportFromExcel,
-      onExportToExcel,
-      onFilterWorkers,
+      onClickFabActAddNewWorker,
+      onClickFabActImportFromExcel,
+      onClickFabActExportToExcel,
+      onClickFabActFilterWorkers,
     };
   },
 });
