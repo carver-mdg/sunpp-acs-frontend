@@ -1,33 +1,53 @@
 <template>
-  <div :id="galleryID" class="pswp-gallery pswp-gallery--with-caption">
-    <span
-      class="pswp-gallery__item"
-      v-for="(image, key) in imagesData"
-      :key="key"
-    >
-      <a
-        :href="image.largeURL"
-        :data-pswp-width="image.width"
-        :data-pswp-height="image.height"
-        target="_blank"
-        rel="noreferrer"
-      >
-        <img :src="image.thumbnailURL" :alt="image.alt" />
-      </a>
-      <div>{{ image.alt }}</div>
-      <!-- <div class="pswp__custom-caption"></div> -->
-      <!-- <div class="hidden-caption-content">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        <a href="https://example.com" target="_blank" rel="nofollow"
-          >Test link &rarr;</a
-        >
-      </div> -->
-    </span>
+  <div
+    :id="galleryID"
+    class="pswp-gallery pswp-gallery--with-caption"
+    style="background: #eee"
+  >
+    <!-- <div v-if="btnDelete">No photos founded</div> -->
+    <q-scroll-area style="height: 170px; padding: 10px">
+      <div class="row no-wrap">
+        <span v-for="(image, key) in imagesRef" :key="key" class="flex">
+          <span
+            class="pswp-gallery__item row items-center no-wrap"
+            style="height: 100px"
+          >
+            <a
+              :href="image[imagesBindNames['imageUrl']]"
+              :data-pswp-width="image[imagesBindNames['imageWidth']]"
+              :data-pswp-height="image[imagesBindNames['imageHeight']]"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <q-img
+                :src="image[imagesBindNames['imageThumbnailUrl']]"
+                style="width: 100px; margin: 5px"
+                class="q-pa-md"
+                fit="contain"
+              />
+            </a>
+            <div v-if="captionGallery" class="pswp__custom-caption">
+              {{ captionGallery }}
+            </div>
+            <!-- <div class="hidden-caption-content">Some content of image</div> -->
+          </span>
+          <div class="row items-center no-wrap" style="margin-top: 10px">
+            <q-btn
+              v-if="btnDelete"
+              flat
+              icon="delete"
+              color="negative"
+              @click="onClickBtnDelete(image)"
+            />
+          </div>
+        </span>
+      </div>
+    </q-scroll-area>
   </div>
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, ref, toRefs, toRef } from "vue";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import "photoswipe/style.css";
 
@@ -35,34 +55,29 @@ export default defineComponent({
   name: "SimpleGallery",
   props: {
     galleryID: String,
+    captionGallery: String,
     images: Array,
+    imagesBindingNames: Object,
+    btnDelete: { type: Boolean, default: false },
+    onClickBtnDelete: Function,
   },
+
   setup(props) {
-    /*const zoom_max = 1;
+    const imagesRef = toRef(props, "images");
 
-    props.images.forEach((item, index) => {
-      // item.width = 100 * zoom_max;
-      // item.height = 100 * zoom_max;
-
-      const img = new Image();
-      img.src = item.largeURL;
-      img.onload = function () {
-        // console.log(this.naturalWidth + " " + this.naturalHeight);
-
-        item.width = this.naturalWidth * zoom_max;
-        item.height = this.naturalHeight * zoom_max;
-
-        // item.width = 100 * zoom_max;
-        // item.height = 100 * zoom_max;
-      };
-    });*/
-
-    // console.log(props.images);
+    let imagesBindNames = ref({
+      imageUrl: props.imagesBindingNames["imageUrl"],
+      imageThumbnailUrl: props.imagesBindingNames["imageThumbnailUrl"],
+      imageWidth: props.imagesBindingNames["imageWidth"],
+      imageHeight: props.imagesBindingNames["imageHeight"],
+    });
 
     return {
-      imagesData: props.images,
+      imagesRef,
+      imagesBindNames,
     };
   },
+
   mounted() {
     if (!this.lightbox) {
       this.lightbox = new PhotoSwipeLightbox({
@@ -126,7 +141,6 @@ export default defineComponent({
       this.lightbox = null;
     }
   },
-  methods: {},
 });
 </script>
 
