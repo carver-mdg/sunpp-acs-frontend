@@ -1,1 +1,1 @@
-Application to simplify the work of group the Automatic System Control on nuclear power plant 
+Application to simplify the work of group the Automatic System Control in my work
