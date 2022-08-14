@@ -24,7 +24,19 @@
                 style="width: 100px; margin: 5px"
                 class="q-pa-md"
                 fit="contain"
-              />
+              >
+                <template v-slot:error>
+                  <div
+                    class="absolute-full flex flex-center bg-negative text-white"
+                  >
+                    Cannot load image
+                  </div>
+                  <!-- <object
+                    data="images/noImageAvailable.svg"
+                    type="image/svg+xml"
+                  ></object> -->
+                </template>
+              </q-img>
             </a>
             <div v-if="captionGallery" class="pswp__custom-caption">
               {{ captionGallery }}
