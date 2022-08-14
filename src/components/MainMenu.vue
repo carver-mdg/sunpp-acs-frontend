@@ -543,6 +543,17 @@
     </q-item-section>
   </q-item>
 
+  <!-- PPR -->
+  <q-item clickable @click="router.push('/ppr')" v-ripple.early>
+    <q-item-section avatar>
+      <q-icon name="history" />
+    </q-item-section>
+
+    <q-item-section>
+      <q-item-label> ППР </q-item-label>
+    </q-item-section>
+  </q-item>
+
   <!-- Reports -->
   <q-item clickable @click="router.push('/reports')" v-ripple.early>
     <q-item-section avatar>

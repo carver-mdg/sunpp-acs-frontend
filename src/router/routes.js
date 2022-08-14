@@ -20,6 +20,7 @@ const routes = [
       // repairs
       { path: 'measuring_devices', component: () => import('src/pages/MeasuringDevicesPage.vue'), meta: { title: "Measuring Devices" } },
       { path: 'workers', component: () => import('src/pages/WorkersPage.vue'), meta: { title: "Workers" } },
+      { path: 'ppr', component: () => import('src/pages/PprsPage.vue'), meta: { title: "PPRs" } },
       { path: 'reports', component: () => import('src/pages/ReportsPage.vue'), meta: { title: "Reports" } },
       { path: 'handbook', component: () => import('src/pages/HandbookPage.vue'), meta: { title: "Handbook" } },
     ]
