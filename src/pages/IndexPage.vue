@@ -9,10 +9,6 @@
     />
 
     <div style="max-width: 500px; overflow: scroll">
-      <SimpleGallery :galleryID="galleryID" :images="images" />
-    </div>
-
-    <div style="max-width: 500px; overflow: scroll">
       <apexchart type="line" :options="options" :series="series"></apexchart>
     </div>
   </q-page>
@@ -22,7 +18,6 @@
 import { useQuasar } from "quasar";
 import { defineComponent, ref } from "vue";
 import { usePositionsStore } from "stores/positions";
-import SimpleGallery from "src/components/SimpleGallery.vue";
 // import VueApexCharts from "vue3-apexcharts";
 import { axios } from "src/boot/axios";
 
@@ -31,7 +26,6 @@ let XLSX = require("xlsx");
 export default defineComponent({
   name: "IndexPage",
   components: {
-    SimpleGallery,
   },
 
   setup() {
@@ -76,17 +70,6 @@ export default defineComponent({
       reader.readAsBinaryString(file);
     };
 
-    let images = ref([]);
-    for (let i = 0; i < 10; i++) {
-      images.value.push({
-        largeURL: `https://placeimg.com/500/300/nature?t=${i}`,
-        thumbnailURL: `https://placeimg.com/500/300/nature?t=${i}`,
-        width: 500,
-        height: 300,
-        alt: `image ${i}`,
-      });
-    }
-
     let options = ref({
       chart: {
         id: "vuechart-example",
@@ -104,8 +87,6 @@ export default defineComponent({
 
     return {
       file_excel: ref(null),
-      galleryID: ref("id111"),
-      images,
       options,
       series,
       onPickFile,
