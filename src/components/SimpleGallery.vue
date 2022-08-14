@@ -78,10 +78,10 @@ export default defineComponent({
     const imagesRef = toRef(props, "images");
 
     let imagesBindNames = ref({
-      imageUrl: props.imagesBindingNames["imageUrl"],
-      imageThumbnailUrl: props.imagesBindingNames["imageThumbnailUrl"],
-      imageWidth: props.imagesBindingNames["imageWidth"],
-      imageHeight: props.imagesBindingNames["imageHeight"],
+      imageUrl: props?.imagesBindingNames?.imageUrl || "imageUrl",
+      imageThumbnailUrl: props?.imagesBindingNames?.imageThumbnailUrl || "imageThumbnailUrl",
+      imageWidth: props?.imagesBindingNames?.imageWidth || "imageWidth",
+      imageHeight: props?.imagesBindingNames?.imageHeight || "imageHeight",
     });
 
     return {
