@@ -437,7 +437,7 @@ export default defineComponent({
         `${utils.getRandomBetween(1, 3)}.${utils.getRandomBetween(1, 89)}`
       );
 
-      // FIXME : Find normal odds for resistanceWinding
+      // @FIXME  Find normal odds for resistanceWinding
       let resistanceWinding = utils.getRandomBetween(1, 10);
       storeImMeoRepairs.curEditRepair.resistanceWindingAB = resistanceWinding;
       storeImMeoRepairs.curEditRepair.resistanceWindingBC = resistanceWinding;

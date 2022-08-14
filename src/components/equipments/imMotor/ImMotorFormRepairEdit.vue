@@ -416,13 +416,13 @@ export default defineComponent({
       storeImMotorRepairs.curEditRepair.resistanceInsulation =
         utils.getRandomBetween(1, 10) * 1000;
 
-      // FIXME : Find normal odds for resistanceWinding
+      // @FIXME Find normal odds for resistanceWinding
       let resistanceWinding = utils.getRandomBetween(0, 10);
       storeImMotorRepairs.curEditRepair.resistanceWindingAB = resistanceWinding;
       storeImMotorRepairs.curEditRepair.resistanceWindingBC = resistanceWinding;
       storeImMotorRepairs.curEditRepair.resistanceWindingAC = resistanceWinding;
 
-      // FIXME : Find normal odds for currentNoLoad
+      // @FIXME Find normal odds for currentNoLoad
       let currentNoLoad = utils.getRandomBetween(2, 3);
       storeImMotorRepairs.curEditRepair.currentNoLoadA = currentNoLoad;
       storeImMotorRepairs.curEditRepair.currentNoLoadB = currentNoLoad;
