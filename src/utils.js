@@ -11,6 +11,17 @@ export function getRandomBetween(min, max) {
 
 /**
  * 
+ */
+export function generateUniqueID() {
+    let uniqueId = "";
+    for (let i = 0; i < 3; i++)
+        uniqueId += Math.random().toString().slice(2);
+    return uniqueId;
+}
+
+
+/**
+ * 
  * @param {*} n 
  * @param {*} digits 
  * @returns 

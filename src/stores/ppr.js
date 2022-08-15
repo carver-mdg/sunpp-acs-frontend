@@ -100,5 +100,38 @@ export const usePprsStore = defineStore('pprs', {
           errFunc(err.response?.data?.message_error || err);
         })
     },
+    
+    /**
+     * 
+     * @param {*} param0 
+     */
+    async downloadProtocols({ ppr, onUploadProgressFunc, okFunc, errFunc } = {}) {
+      api
+        .get(
+          `api/v1/pprs/${ppr.id}/protocols/?timestamp=${new Date().getTime()}`,
+          {
+            responseType: "blob",
+            onDownloadProgress: (progressEvent) => {
+              const total = parseFloat(progressEvent.total);
+              const current = progressEvent.loaded;
+
+              let percentCompleted = Math.floor((current / total) * 100);
+              onUploadProgressFunc(percentCompleted);
+            },
+          }
+        )
+        .then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", `${ppr.name}-${utils.generateUniqueID()}.mp3`);
+          document.body.appendChild(link);
+          link.click();
+        })
+        .catch((err) => {
+          errFunc(err.response?.data?.message_error || err);
+        });
+    },
+
   }
 })

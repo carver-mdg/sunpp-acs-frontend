@@ -19,9 +19,15 @@
       dense
     >
       <template v-slot:top="props">
-        Даты ППР
+        Список планово-предупредительных ремонтов (ППР)
         <q-space />
-        <q-input dense clearable debounce="300" v-model="tableFilter" placeholder="Search">
+        <q-input
+          dense
+          clearable
+          debounce="300"
+          v-model="tableFilter"
+          placeholder="Search"
+        >
           <template v-slot:append>
             <q-icon name="search" />
           </template>
@@ -43,15 +49,39 @@
               dense
               icon="edit"
               color="primary"
+              hi
               @click="onClickBtnPprEdit(props.row)"
-            />
+            >
+              <q-tooltip> Редактировать </q-tooltip>
+            </q-btn>
+            <q-btn
+              flat
+              dense
+              icon="assignment_returned"
+              color="orange-8"
+              @click="onClickBtnPprPrintProtocols(props.row)"
+            >
+              <q-tooltip> Генерация протоколов </q-tooltip>
+            </q-btn>
+            <q-btn
+              flat
+              dense
+
+              icon="construction"
+              color="blue-grey-4"
+              @click="onClickBtnPprRepairs(props.row)"
+            >
+              <q-tooltip> Посмотреть выполненные ремонты </q-tooltip>
+            </q-btn>
             <q-btn
               flat
               dense
               icon="delete"
               color="negative"
               @click="onClickBtnPprDelete(props.row)"
-            />
+            >
+              <q-tooltip> Удалить </q-tooltip>
+            </q-btn>
           </q-td>
         </q-tr>
       </template>
@@ -67,6 +97,8 @@ import { defineComponent, ref } from "vue";
 import { usePprsStore } from "stores/ppr";
 import PprFormEdit from "src/components/pprs/PprFormEdit.vue";
 import PprsPageStickyButton from "src/components/pprs/PprsPageStickyButton.vue";
+import { api } from "boot/axios";
+import * as utils from "src/utils";
 
 const columns = [
   {
@@ -108,6 +140,7 @@ const columns = [
   {
     name: "actions",
     label: "actions",
+    align: "left",
   },
 ];
 
@@ -121,7 +154,7 @@ export default defineComponent({
   setup() {
     const $q = useQuasar();
     const storePprs = usePprsStore();
-    let tableFilter = ref('');
+    let tableFilter = ref("");
 
     storePprs.loadPprs((err) => {
       $q.notify({
@@ -133,17 +166,10 @@ export default defineComponent({
       });
     });
 
-    // new Date("2022-02-15T08:12:10").toUTCString()
-    // 'Tue, 15 Feb 2022 06:12:10 GMT'
-
-    // new Date('Tue, 15 Feb 2022 06:12:10 GMT').toLocaleString()
-    // '15.02.2022, 08:12:10'
-
     /**
      *
      */
     const onClickBtnPprEdit = (ppr) => {
-      //   console.log(ppr);
       storePprs.isShowEditDialog = true;
       storePprs.curEditPpr = Object.assign({}, ppr);
     };
@@ -156,7 +182,7 @@ export default defineComponent({
         title: "Delete ppr",
         message: `Are you sure you want to permanently 
                     delete this ppr (
-                        ${ppr.name} 
+                        ${ppr.name} /
                         ${ppr.numPowerUnit} 
                         ) ?`,
         cancel: true,
@@ -189,12 +215,57 @@ export default defineComponent({
         .onCancel(() => {});
     };
 
+    /**
+     *
+     */
+    const onClickBtnPprPrintProtocols = (ppr) => {
+      const notif = $q.notify({
+        group: false,
+        timeout: 0,
+        spinner: true,
+        message: "Download protocols...",
+      });
+
+      storePprs.downloadProtocols({
+        ppr,
+        onUploadProgressFunc: (percentage) => {
+          notif({
+            caption: `${percentage} %`,
+          });
+
+          if (percentage >= 100) {
+            notif({
+              icon: "done",
+              spinner: false,
+              message: "Downloading done!",
+              timeout: 300,
+            });
+          }
+        },
+        okFunc: () => {
+          notif({
+            timeout: 1,
+          });
+        },
+        errFunc: (err) => {
+          $q.notify({
+            color: "negative",
+            position: "top",
+            message: `Failed to download data from server: ${err}`,
+            icon: "report_problem",
+            progress: true,
+          });
+        },
+      });
+    };
+
     return {
       storePprs,
       columns,
       tableFilter,
       onClickBtnPprEdit,
       onClickBtnPprDelete,
+      onClickBtnPprPrintProtocols,
     };
   },
 });
