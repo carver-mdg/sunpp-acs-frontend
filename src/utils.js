@@ -30,6 +30,18 @@ export function zeroPad(n, digits) {
     return n.toString().padStart(digits, '0');
 }
 
+/**
+ * 
+ * @param {*} bytes 
+ * @returns 
+ */
+export function bytesToSize(bytes) {
+    let sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    if (bytes == 0) return '0 Byte';
+    let i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+    return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+ }
+
 
 /**
  * 
@@ -51,8 +63,11 @@ export function getDateTimeUTCFromStr(strDateTime) {
         `${year}-${month}-${day}T${hours}:${minutes}`
     ).toUTCString();
 
-    if (dateTimeUTC == 'Invalid Date')
-        throw ('getDateTimeUTCFromStr: error format strDateTime');
+    if (dateTimeUTC == 'Invalid Date') {
+        let msgErr = `getDateTimeUTCFromStr: error format strDateTime: ${strDateTime}`;
+        console.error(msgErr);
+        throw new Error(msgErr);
+    }
     return dateTimeUTC;
 };
 
