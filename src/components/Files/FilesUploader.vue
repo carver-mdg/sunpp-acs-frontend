@@ -219,7 +219,7 @@ export default defineComponent({
     const onClickBtnAddFilesToUpload = () => {
       let anchor = document.createElement("input");
       anchor.type = "file";
-      anchor.accept = "image/png, image/gif, image/jpeg";
+      anchor.accept = "*.*";
       anchor.multiple = "multiple";
       anchor.click();
 
