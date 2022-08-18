@@ -1,5 +1,4 @@
 <template>
-  <!-- @dragover.prevent -->
   <div
     @dragover.prevent
     @dragover="onDragoverFilesToUpload"
@@ -17,7 +16,9 @@
           icon="clear_all"
           color="black"
           @click="onClickBtnClearFilesToUpload"
-        />
+        >
+          <q-tooltip>Clear all</q-tooltip>
+        </q-btn>
       </div>
       <div class="col-7">
         <div class="text-subtitle2">Upload your files</div>
@@ -34,7 +35,9 @@
           icon="add"
           color="black"
           @click="onClickBtnAddFilesToUpload"
-        />
+        >
+          <q-tooltip>Add file(s)</q-tooltip>
+        </q-btn>
         <q-btn
           flat
           dense
@@ -47,102 +50,66 @@
           icon="cloud_upload"
           color="black"
           @click="onClickBtnUploadFilesToUpload"
-        />
+        >
+          <q-tooltip>Upload file(s)</q-tooltip>
+        </q-btn>
       </div>
     </div>
-    <div class="row no-wrap" style="height: 200px">
-      <q-list bordered separator class="scroll full-width">
-        <q-item clickable v-for="file in filesAddedToUpload" :key="file.obj.id">
-          <q-item-section side>
-            <q-img
-              class="q-pa-lg"
-              :src="getFileExtensionIcon(file.obj.name)"
-              fit="contain"
-            >
-              <template v-slot:error>
-                <div
-                  class="absolute-full flex flex-center bg-negative text-white"
-                >
-                  Cannot load image
-                </div>
-              </template>
-            </q-img>
-          </q-item-section>
-          <q-item-section class="overflow-hidden">
-            <q-item-label>
-              {{ file.obj.name }}
-            </q-item-label>
-            <q-item-label caption>
-              {{ file.obj.desc }}
-            </q-item-label>
-            <q-item-label caption>
-              <q-separator />
-              {{ file.obj.dateTimeAdded }}
-            </q-item-label>
-          </q-item-section>
-          <q-item-section side>
-            <div>
-              <q-btn
-                flat
-                dense
-                icon="edit"
-                color="primary"
-                @click="onClickBtnFileAddedDescEdit(file)"
-              >
-                <q-tooltip>Редактировать описание</q-tooltip>
-              </q-btn>
-              <q-btn
-                flat
-                dense
-                icon="delete"
-                color="negative"
-                @click="onClickBtnFileAddedDelete(file)"
-              >
-                <q-tooltip>Удалить файл</q-tooltip>
-              </q-btn>
-            </div>
-          </q-item-section>
-        </q-item>
-        <q-item
-          v-if="filesAddedToUpload.length == 0"
-          class="row justify-center items-center full-height"
-        >
-          <div>
-            Drop files to upload
-            <q-img
-              src="icons/drop_file.svg"
-              fit="contain"
-              style="max-width: 100px"
-            />
-          </div>
-        </q-item>
-      </q-list>
+    <div class="row no-wrap drop-zone" style="height: 200px">
+      <div
+        v-if="filesAddedToUpload.length == 0"
+        class="row justify-center items-center full-height full-width"
+      >
+        <div>
+          Drop files to upload
+          <q-img
+            src="icons/drop_file.svg"
+            fit="contain"
+            style="max-width: 100px"
+          />
+        </div>
+      </div>
+
+      <FileList
+        v-if="filesAddedToUpload.length > 0"
+        :files="filesAddedToUpload"
+        :headerBar="false"
+        :btnDownloadVisibled="false"
+        class="full-width"
+        @onUpdate="onUpdateFileDesc"
+        @onDelete="onDeleteFile"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import { useQuasar } from "quasar";
-import { defineComponent, ref } from "vue";
+import { defineComponent, defineAsyncComponent, ref } from "vue";
 import FileModel from "src/models/FileModel.js";
-import FileFormDescEdit from "src/components/Files/FileFormDescEdit";
+import FileList from "src/components/Files/FileList";
 import { api } from "boot/axios";
 import * as utils from "src/utils";
 
 export default defineComponent({
   name: "FilesUploader",
+  components: {
+    FileList,
+  },
   props: {
-    files: {
-      type: Array,
-      required: true,
-    },
     urlUpload: {
       type: String,
       required: true,
     },
+    multiple: {
+      type: Boolean,
+      default: true,
+    },
   },
 
-  setup(props, context) {
+  emits: ["onUploadedFile"],
+
+  setup(props, { emit }) {
     const $q = useQuasar();
 
     let dropZoneClass = ref("");
@@ -163,54 +130,55 @@ export default defineComponent({
      * @param {FileList} files
      */
     const addFilesToUpload = (files) => {
-      [...files].map((file) => {
-        // disallow duplicate files
-        if (
-          filesAddedToUpload.value.find((fau) => fau?.obj?.name == file.name) !=
-          null
-        ) {
-          $q.notify({
-            color: "warning",
-            textColor: "black",
-            position: "top",
-            message: `Duplicate files not allowed`,
-            caption: `'${file.name}'`,
-            icon: "warning",
-            progress: true,
-            closeBtn: true,
+      [...files]
+        .filter((file) => {
+          if (
+            filesAddedToUpload.value.filter((fau) => fau?.name == file.name)
+              .length > 0
+          ) {
+            $q.notify({
+              color: "warning",
+              textColor: "black",
+              position: "top",
+              message: `Duplicate files not allowed`,
+              caption: `'${file.name}'`,
+              icon: "warning",
+              progress: true,
+              closeBtn: true,
+            });
+
+            return false;
+          }
+          return true;
+        })
+        .map((file) => {
+          filesAddedToUploadTotalSize += file.size;
+          filesAddedToUploadTotalSizeLabel.value = utils.bytesToSize(
+            filesAddedToUploadTotalSize
+          );
+          countFilesBeforeUpload++;
+
+          const dateTime = new Date().toLocaleDateString("ru-UA", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
           });
-          return;
-        }
 
-        filesAddedToUploadTotalSize += file.size;
-        filesAddedToUploadTotalSizeLabel.value = utils.bytesToSize(
-          filesAddedToUploadTotalSize
-        );
-        countFilesBeforeUpload++;
+          let dateTimeUTC = utils.getDateTimeUTCFromStr(dateTime);
 
-        const dateTime = new Date().toLocaleDateString("ru-UA", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
+          filesAddedToUpload.value.push(
+            new FileModel({
+              name: file.name,
+              blob: file,
+              desc: null,
+              dateTimeRawAdded: dateTime,
+              dateTimeUTCAdded: dateTimeUTC,
+            })
+          );
         });
-
-        let dateTimeUTC = utils.getDateTimeUTCFromStr(
-          dateTime.replace(",", "")
-        );
-
-        filesAddedToUpload.value.push({
-          blob: file,
-          obj: new FileModel({
-            name: file.name,
-            desc: "dgfd",
-            dateTimeAdded: dateTime,
-            dateTimeUTCAdded: dateTimeUTC,
-          }),
-        });
-      });
     };
 
     /**
@@ -220,10 +188,29 @@ export default defineComponent({
       let anchor = document.createElement("input");
       anchor.type = "file";
       anchor.accept = "*.*";
-      anchor.multiple = "multiple";
+      anchor.multiple = props.multiple ? "multiple" : "";
       anchor.click();
 
       anchor.onchange = function () {
+        if (!props.multiple) {
+          if (filesAddedToUpload.value.length >= 1) {
+            $q.notify({
+              color: "warning",
+              textColor: "black",
+              position: "top",
+              message: `Allowed only one file to add`,
+              icon: "warning",
+              progress: true,
+              closeBtn: true,
+            });
+
+            return;
+          }
+
+          addFilesToUpload([this.files[0]]);
+          return;
+        }
+
         addFilesToUpload(this.files);
       };
     };
@@ -234,6 +221,26 @@ export default defineComponent({
      */
     const onDropFilesToUpload = (e) => {
       dropZoneClass.value = "";
+
+      if (!props.multiple) {
+        if (filesAddedToUpload.value.length >= 1) {
+          $q.notify({
+            color: "warning",
+            textColor: "black",
+            position: "top",
+            message: `Allowed only one file to add`,
+            icon: "warning",
+            progress: true,
+            closeBtn: true,
+          });
+
+          return;
+        }
+
+        addFilesToUpload([e.dataTransfer.files[0]]);
+        return;
+      }
+
       addFilesToUpload(e.dataTransfer.files);
     };
 
@@ -246,14 +253,14 @@ export default defineComponent({
         reader.onload = (function (thFile) {
           return function (e) {
             isUploadingFilesLoading.value = true;
-            arrPercentagesUpload.value[file.obj.name] = 0;
+            arrPercentagesUpload.value[file.name] = 0;
+
+            let fileModel = new FileModel(file);
+            delete fileModel["blob"];
 
             let formDataSender = new FormData();
             formDataSender.append("fileUpload", thFile);
-            formDataSender.append(
-              "fileModelObj",
-              JSON.stringify(new FileModel(file.obj))
-            );
+            formDataSender.append("fileModelObj", JSON.stringify(fileModel));
 
             api
               .post(props.urlUpload, formDataSender, {
@@ -265,7 +272,7 @@ export default defineComponent({
                     (progressEvent.loaded * 100) / progressEvent.total
                   );
 
-                  arrPercentagesUpload.value[file.obj.name] = percent;
+                  arrPercentagesUpload.value[file.name] = percent;
                   let sumPercentagesUploadFiles = 0;
 
                   for (let prop in arrPercentagesUpload.value)
@@ -279,6 +286,7 @@ export default defineComponent({
                 },
               })
               .then((response) => {
+                emit("onUploadedFile", new FileModel(response.data));
                 deleteFileAddedToUpload(file);
 
                 // all files downloaded => clear percents
@@ -301,7 +309,11 @@ export default defineComponent({
                   closeBtn: true,
                 });
 
-                // @WARNING: if err must be cleared percentage, ... maybe something else ???
+                countFilesBeforeUpload = filesAddedToUpload.value.length;
+                arrPercentagesUpload.value = {};
+                filesAddedToUploadPercentUpload.value = 0;
+                isUploadingFilesLoading.value = false;
+
                 console.error(errMsg);
               });
           };
@@ -313,76 +325,18 @@ export default defineComponent({
 
     /**
      *
+     * @param {*} file
      */
-    const onClickBtnFileAddedDescEdit = (fileItem) => {
-      $q.dialog({
-        component: FileFormDescEdit,
-        componentProps: {
-          persistent: true,
-          fileObj: fileItem,
-        },
-      });
+    const onUpdateFileDesc = (fileItem) => {
+      console.log(fileItem);
     };
 
     /**
      *
+     * @param {*} fileItem
      */
-    const onClickBtnFileAddedDelete = (fileItem) => {
+    const onDeleteFile = (fileItem) => {
       deleteFileAddedToUpload(fileItem);
-    };
-
-    /**
-     *
-     * @param {*} fileName
-     */
-    const getFileExtensionIcon = (fileName) => {
-      switch (fileName.split(".").pop()?.toLowerCase()) {
-        case "doc":
-        case "docx":
-          return "icons/file_extension/icon_docx.svg";
-
-        case "ppt":
-        case "pptx":
-          return "icons/file_extension/icon_pptx.svg";
-
-        case "xls":
-        case "xlsx":
-          return "icons/file_extension/icon_xlsx.svg";
-
-        case "rtf":
-          return "icons/file_extension/icon_rtf.svg";
-
-        case "txt":
-          return "icons/file_extension/icon_txt.svg";
-
-        case "dwg":
-          return "icons/file_extension/icon_dwg.svg";
-
-        case "exe":
-          return "icons/file_extension/icon_exe.svg";
-
-        case "jpg":
-          return "icons/file_extension/icon_jpg.svg";
-
-        case "png":
-          return "icons/file_extension/icon_png.svg";
-
-        case "svg":
-          return "icons/file_extension/icon_svg.svg";
-
-        case "pdf":
-          return "icons/file_extension/icon_pdf.svg";
-
-        case "zip":
-          return "icons/file_extension/icon_zip.svg";
-
-        case "rar":
-          return "icons/file_extension/icon_rar.svg";
-
-        default:
-          return "icons/file_extension/icon_unknow.svg";
-      }
-      return "icons/file_extension/icon_unknow.svg";
     };
 
     /**
@@ -390,7 +344,7 @@ export default defineComponent({
      */
     const deleteFileAddedToUpload = (fileItem) => {
       let filtered = filesAddedToUpload.value.filter((fm) => {
-        if (fm.obj.name == fileItem?.obj.name) {
+        if (fm.name == fileItem?.name) {
           filesAddedToUploadTotalSize -= fileItem.blob.size;
           filesAddedToUploadTotalSizeLabel.value = utils.bytesToSize(
             filesAddedToUploadTotalSize
@@ -418,7 +372,7 @@ export default defineComponent({
      *
      */
     const onDragoverFilesToUpload = () => {
-      dropZoneClass.value = "drop-zone";
+      dropZoneClass.value = "drop-zone-dragover";
     };
 
     /**
@@ -443,11 +397,12 @@ export default defineComponent({
     };
 
     return {
-      getFileExtensionIcon,
       onClickBtnFileDescEdit,
       onClickBtnFileDelete,
-      onClickBtnFileAddedDescEdit,
-      onClickBtnFileAddedDelete,
+
+      onUpdateFileDesc,
+      onDeleteFile,
+
       onClickBtnClearFilesToUpload,
       onClickBtnAddFilesToUpload,
       onClickBtnUploadFilesToUpload,
@@ -468,6 +423,9 @@ export default defineComponent({
 
 <style scoped>
 .drop-zone {
+  border: 1px solid #ccc;
+}
+.drop-zone-dragover {
   border: 3px dashed #ccc;
   opacity: 0.4;
 }

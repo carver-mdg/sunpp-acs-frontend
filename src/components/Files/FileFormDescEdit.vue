@@ -7,9 +7,41 @@
     transition-hide="slide-down"
   >
     <q-card class="q-dialog-plugin">
+      <div class="q-pa-sm bg-amber text-subtitle2">
+        Edit file description, tags
+      </div>
+      <q-separator />
+
       <q-card-section>
-        {{fileObj}}
+        <q-input
+          outlined
+          clearable
+          v-model="mInpFileDesc"
+          label="desc"
+          type="textarea"
+        />
       </q-card-section>
+
+      <!-- <q-card-section>
+        <q-btn
+          dense
+          square
+          icon="add_box"
+          color="primary"
+          @click="onClickBtnAddTag"
+        >
+          <q-tooltip>Add tag</q-tooltip>
+        </q-btn>
+        <q-btn
+          dense
+          square
+          icon="queue"
+          color="primary"
+          @click="onClickBtnAddTag"
+        >
+          <q-tooltip>Add group tag</q-tooltip>
+        </q-btn>
+      </q-card-section> -->
 
       <q-separator />
       <q-card-actions align="right">
@@ -23,9 +55,6 @@
 <script>
 import { useQuasar, useDialogPluginComponent } from "quasar";
 import { defineComponent, ref } from "vue";
-import FileModel from "src/models/FileModel.js";
-import { api } from "boot/axios";
-import * as utils from "src/utils";
 
 export default defineComponent({
   name: "FileFormDescEdit",
@@ -42,17 +71,27 @@ export default defineComponent({
     const $q = useQuasar();
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
       useDialogPluginComponent();
+    let mInpFileDesc = ref(props.fileObj.desc);
+
+    // let mChips = ref([]);
+    // le
 
     /**
      *
      */
-    const onOKClick = () => onDialogOK();
+    const onOKClick = () => {
+      onDialogOK({
+        desc: mInpFileDesc.value,
+      });
+    };
 
     return {
       dialogRef,
       onDialogHide,
       onOKClick,
       onCancelClick: onDialogCancel,
+
+      mInpFileDesc,
     };
   },
 });
