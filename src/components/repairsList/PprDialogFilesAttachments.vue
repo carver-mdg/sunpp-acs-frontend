@@ -12,7 +12,6 @@
         class="bg-amber text-black text-subtitle2 text-weight-bold"
       >
         {{dialogTitleFileAttachment}} <br/>
-        {{ $t('failed') }}
       </q-card-section>
       <q-separator />
 
@@ -118,7 +117,6 @@ export default {
      * @param {*} fileItem
      */
     const onEventUpdateFile = (fileItem) => {
-      // @WARNING not released on server
       api
         .put(`api/v1/file/${fileItem.id}`, fileItem)
         .then((response) => {
