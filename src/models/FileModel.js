@@ -1,19 +1,12 @@
 class FileModel {
     constructor(fileObj) {
         this.id = fileObj?.id;
-        this.name = fileObj?.name || "fdsf";
+        this.name = fileObj?.name || "";
         this.url = fileObj?.url;
+        this.blob = fileObj?.blob;
         this.desc = fileObj?.desc;
-        this.dateTimeAdded = fileObj?.dateTimeAdded;
+        this.dateTimeRawAdded = fileObj?.dateTimeRawAdded;
         this.dateTimeUTCAdded = fileObj?.dateTimeUTCAdded;
-
-
-        // this.id = "1";
-        // this.name = "1";
-        // this.url = "1";
-        // this.desc = "1";
-        // this.dateTimeAdded = "1";
-        // this.dateTimeUTCAdded = "1";
     }
 }
 

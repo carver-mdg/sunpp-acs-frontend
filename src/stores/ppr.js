@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { api } from "boot/axios";
-import PprDateTimeModel from "src/models/pprs/PprDateTimeModel";
+import PprDateTimeModel from "src/models/repairsList/PprDateTimeModel";
+import FileModel from 'src/models/FileModel';
 import * as utils from "src/utils";
 
 
@@ -28,7 +29,7 @@ export const usePprsStore = defineStore('pprs', {
      */
     async loadPprs({ errFunc } = {}) {
       api
-        .get("api/v1/pprs/dateTimes/")
+        .get("api/v1/repairs/pprs/dateTimes/")
         .then((response) => {
           this.pprs = [];
           for (let idx in response.data) {
@@ -51,7 +52,7 @@ export const usePprsStore = defineStore('pprs', {
          */
     async savePpr({ ppr, okFunc, errFunc } = {}) {
       api
-        .post("api/v1/pprs/dateTimes/", ppr)
+        .post("api/v1/repairs/pprs/dateTimes/", ppr)
         .then((response) => {
           this.pprs.push(new PprDateTimeModel(response.data));
           okFunc()
@@ -67,7 +68,7 @@ export const usePprsStore = defineStore('pprs', {
      */
     async updatePPr({ ppr, okFunc, errFunc } = {}) {
       api
-        .put(`api/v1/pprs/dateTimes/${ppr.id}`, ppr)
+        .put(`api/v1/repairs/pprs/dateTimes/${ppr.id}`, ppr)
         .then((response) => {
           let found_idx = this.getPprIdxArrById(ppr.id);
           if (found_idx == null)
@@ -91,7 +92,7 @@ export const usePprsStore = defineStore('pprs', {
       if (found_idx == null) return;
 
       api
-        .delete(`api/v1/pprs/dateTimes/${this.pprs[found_idx].id}`)
+        .delete(`api/v1/repairs/pprs/dateTimes/${this.pprs[found_idx].id}`)
         .then((response) => {
           this.pprs.splice(found_idx, 1);
           okFunc();
@@ -100,6 +101,27 @@ export const usePprsStore = defineStore('pprs', {
           errFunc(err.response?.data?.message_error || err);
         })
     },
+
+
+    /**
+     * 
+     * @param {*} param0 
+     */
+    //  async loadFilesAttachmentsByPprId({ pprId, okFunc, errFunc } = {}) {
+    //   api
+    //     .get(`api/v1/repairs/pprs/${pprId}/fileAttachment/`)
+    //     .then((response) => {
+    //       let fileModels = [];
+    //       for (let idx in response.data) {
+    //         fileModels.push(new FileModel(response.data[idx]));
+    //       }
+
+    //       okFunc(fileModels);
+    //     })
+    //     .catch((err) => {
+    //       errFunc(err.response?.data?.message_error || err);
+    //     })
+    // },
     
     /**
      * 
@@ -108,7 +130,7 @@ export const usePprsStore = defineStore('pprs', {
     async downloadProtocols({ ppr, onUploadProgressFunc, okFunc, errFunc } = {}) {
       api
         .get(
-          `api/v1/pprs/${ppr.id}/protocols/?timestamp=${new Date().getTime()}`,
+          `api/v1/repairs/pprs/${ppr.id}/protocols/?timestamp=${new Date().getTime()}`,
           {
             responseType: "blob",
             onDownloadProgress: (progressEvent) => {
@@ -124,7 +146,7 @@ export const usePprsStore = defineStore('pprs', {
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement("a");
           link.href = url;
-          link.setAttribute("download", `${ppr.name}-${utils.generateUniqueID()}.zip`);
+          link.setAttribute("download", `${ppr.name}.zip`);
           document.body.appendChild(link);
           link.click();
         })

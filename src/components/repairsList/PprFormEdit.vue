@@ -44,7 +44,7 @@
               clearable
               v-model="storePprs.curEditPpr.dateTimeBegin"
               label-slot
-              mask="##.##.#### ##:##"
+              mask="##.##.####, ##:##"
               reactive-rules
               :rules="[(val) => !!val || 'Field is required']"
             >
@@ -65,11 +65,11 @@
                       <div class="row items-center justify-center">
                         <q-date
                           v-model="storePprs.curEditPpr.dateTimeBegin"
-                          mask="DD.MM.YYYY HH:mm"
+                          mask="DD.MM.YYYY, HH:mm"
                         />
                         <q-time
                           v-model="storePprs.curEditPpr.dateTimeBegin"
-                          mask="DD.MM.YYYY HH:mm"
+                          mask="DD.MM.YYYY, HH:mm"
                           format24h
                           color="purple"
                         />
@@ -90,7 +90,7 @@
               clearable
               v-model="storePprs.curEditPpr.dateTimeEnd"
               label-slot
-              mask="##.##.#### ##:##"
+              mask="##.##.####, ##:##"
               reactive-rules
               :rules="[(val) => !!val || 'Field is required']"
             >
@@ -111,11 +111,11 @@
                       <div class="row items-center justify-center">
                         <q-date
                           v-model="storePprs.curEditPpr.dateTimeEnd"
-                          mask="DD.MM.YYYY HH:mm"
+                          mask="DD.MM.YYYY, HH:mm"
                         />
                         <q-time
                           v-model="storePprs.curEditPpr.dateTimeEnd"
-                          mask="DD.MM.YYYY HH:mm"
+                          mask="DD.MM.YYYY, HH:mm"
                           format24h
                           color="purple"
                         />
@@ -139,8 +139,7 @@
         </q-card-section>
 
         <q-separator />
-
-        <q-card-actions align="right">
+        <q-card-actions align="right" >
           <q-btn label="Cancel" color="primary" v-close-popup />
           <q-btn
             v-if="storePprs.curEditPpr.id"
@@ -229,11 +228,6 @@ export default defineComponent({
         },
       });
     };
-
-    /**
-     *
-     * @param {*} strDateTime
-     */
 
     /**
      *

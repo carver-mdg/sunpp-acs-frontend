@@ -49,7 +49,7 @@ export function bytesToSize(bytes) {
  * @returns 
  */
 export function getDateTimeUTCFromStr(strDateTime) {
-    let [strDate, strTime] = strDateTime.split(" ");
+    let [strDate, strTime] = strDateTime.split(", ");
     let day, month, year, hours, minutes;
 
     if (strDate)
@@ -76,6 +76,16 @@ export function getDateTimeUTCFromStr(strDateTime) {
  * 
  */
 export function getDateTimeLocalFromUTCStr(strDateTimeUTC) {
-    let localDateTime = new Date(strDateTimeUTC);
-    return `${zeroPad(localDateTime.getDate(), 2)}.${zeroPad(localDateTime.getMonth(), 2)}.${localDateTime.getFullYear()} ${zeroPad(localDateTime.getHours(), 2)}:${zeroPad(localDateTime.getMinutes(), 2)}`
+    const dateTime = new Date(strDateTimeUTC).toLocaleDateString("ru-UA", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+    return dateTime;
+
+    // let localDateTime = new Date(strDateTimeUTC);
+    // return `${zeroPad(localDateTime.getDate(), 2)}.${zeroPad(localDateTime.getMonth(), 2)}.${localDateTime.getFullYear()} ${zeroPad(localDateTime.getHours(), 2)}:${zeroPad(localDateTime.getMinutes(), 2)}`
 }

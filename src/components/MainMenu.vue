@@ -543,14 +543,14 @@
     </q-item-section>
   </q-item>
 
-  <!-- PPR -->
-  <q-item clickable @click="router.push('/ppr')" v-ripple.early>
+  <!-- repairsList -->
+  <q-item clickable @click="router.push('/repairsList')" v-ripple.early>
     <q-item-section avatar>
       <q-icon name="history" />
     </q-item-section>
 
     <q-item-section>
-      <q-item-label> ППР </q-item-label>
+      <q-item-label> Ремонты </q-item-label>
     </q-item-section>
   </q-item>
 

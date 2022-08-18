@@ -28,7 +28,7 @@
 import { useQuasar } from "quasar";
 import { defineComponent, ref } from "vue";
 import { usePprsStore } from "stores/ppr";
-import PprDateTimeModel from "src/models/pprs/PprDateTimeModel";
+import PprDateTimeModel from "src/models/repairsList/PprDateTimeModel";
 
 export default defineComponent({
   name: "PprsPageStickyButton",
