@@ -1,7 +1,9 @@
 import enUS from './en-US'
 import ru from './ru-RU'
+import ua from './ua-UA'
 
 export default {
   'en-US': enUS,
-  'ru': ru
+  'ru': ru,
+  'ua': ua,
 }

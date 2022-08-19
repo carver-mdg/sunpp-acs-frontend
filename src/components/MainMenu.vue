@@ -6,7 +6,7 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label> Home </q-item-label>
+      <q-item-label> {{ $t("Main") }} </q-item-label>
     </q-item-section>
   </q-item>
 
@@ -17,7 +17,7 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label> Positions </q-item-label>
+      <q-item-label> {{ $t("Positions") }} </q-item-label>
     </q-item-section>
   </q-item>
 
@@ -28,7 +28,7 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label> Equipments </q-item-label>
+      <q-item-label> {{ $t("Equipments") }} </q-item-label>
     </q-item-section>
 
     <q-item-section side>
@@ -528,7 +528,7 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label> Measuring Devices </q-item-label>
+      <q-item-label> {{ $t("Measuring_Devices") }} </q-item-label>
     </q-item-section>
   </q-item>
 
@@ -539,7 +539,7 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label> Workers </q-item-label>
+      <q-item-label> {{ $t("Workers") }} </q-item-label>
     </q-item-section>
   </q-item>
 
@@ -550,7 +550,7 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label> Ремонты </q-item-label>
+      <q-item-label> {{ $t("Repairs") }} </q-item-label>
     </q-item-section>
   </q-item>
 
@@ -561,7 +561,7 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label> Reports </q-item-label>
+      <q-item-label> {{ $t("Reports") }} </q-item-label>
     </q-item-section>
   </q-item>
 
@@ -572,7 +572,7 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label> Handbook </q-item-label>
+      <q-item-label> {{ $t("Handbook") }} </q-item-label>
     </q-item-section>
   </q-item>
 </template>

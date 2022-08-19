@@ -43,6 +43,7 @@ export const usePprsStore = defineStore('pprs', {
           }
         })
         .catch((err) => {
+          console.error(err);
           errFunc(err.response?.data?.message_error || err);
         })
     },
@@ -58,6 +59,7 @@ export const usePprsStore = defineStore('pprs', {
           okFunc()
         })
         .catch((err) => {
+          console.error(err);
           errFunc(err.response?.data?.message_error || err);
         })
     },
@@ -79,6 +81,7 @@ export const usePprsStore = defineStore('pprs', {
           okFunc();
         })
         .catch((err) => {
+          console.error(err);
           errFunc(err.response?.data?.message_error || err);
         })
     },
@@ -98,6 +101,7 @@ export const usePprsStore = defineStore('pprs', {
           okFunc();
         })
         .catch((err) => {
+          console.error(err);
           errFunc(err.response?.data?.message_error || err);
         })
     },
@@ -151,6 +155,7 @@ export const usePprsStore = defineStore('pprs', {
           link.click();
         })
         .catch((err) => {
+          console.error(err);
           errFunc(err.response?.data?.message_error || err);
         });
     },
