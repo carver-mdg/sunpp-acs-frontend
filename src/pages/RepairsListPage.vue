@@ -109,12 +109,6 @@
       <q-tab-panel name="repair_other"> Ремонты в меж ППР период </q-tab-panel>
     </q-tab-panels>
 
-    <FilesUploader
-      :files="[]"
-      urlUpload="api/v1/file/"
-      style="max-width: 400px"
-    />
-
     <PprsPageStickyButton />
   </q-page>
 </template>
@@ -127,7 +121,6 @@ import PprFormEdit from "src/components/repairsList/PprFormEdit.vue";
 import PprsPageStickyButton from "src/components/repairsList/PprsPageStickyButton.vue";
 import PprDialogRepairs from "src/components/repairsList/PprDialogRepairs.vue";
 import PprDialogFilesAttachments from "src/components/repairsList/PprDialogFilesAttachments";
-import FilesUploader from "src/components/Files/FilesUploader";
 import { api } from "boot/axios";
 import * as utils from "src/utils";
 
@@ -180,7 +173,6 @@ export default defineComponent({
   components: {
     PprFormEdit,
     PprsPageStickyButton,
-    FilesUploader,
   },
 
   setup() {
