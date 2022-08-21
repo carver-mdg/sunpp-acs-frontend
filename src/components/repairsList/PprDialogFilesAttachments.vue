@@ -11,13 +11,14 @@
       <q-card-section
         class="bg-amber text-black text-subtitle2 text-weight-bold"
       >
-        {{dialogTitleFileAttachment}} <br/>
+        {{ dialogTitleFileAttachment }} <br />
       </q-card-section>
       <q-separator />
 
       <q-card-section>
         <FilesUploader
           :urlUpload="urlUploadFiles"
+          :urlTags="urlTags"
           style="max-width: 400px"
           @onUploadedFile="onUploadedFile"
         />
@@ -27,6 +28,7 @@
         <FileList
           :files="filesAttachments"
           :headerBar="true"
+          :urlTags="urlTags"
           class="full-width"
           @onUpdate="onEventUpdateFile"
           @onDelete="onEventDeleteFile"
@@ -44,7 +46,7 @@
 <script>
 import { useQuasar, useDialogPluginComponent } from "quasar";
 import { defineComponent, ref } from "vue";
-import FileModel from "src/models/FileModel";
+import FileModel from "src/models/files/FileModel";
 import FileList from "src/components/Files/FileList";
 import FilesUploader from "src/components/Files/FilesUploader.vue";
 import { api } from "boot/axios";
@@ -58,8 +60,8 @@ export default {
       required: true,
     },
     dialogTitleFileAttachment: {
-      type: String
-    }
+      type: String,
+    },
   },
   components: {
     FilesUploader,
@@ -75,9 +77,12 @@ export default {
 
     let filesToUpload = ref([]);
     let filesAttachments = ref([]);
+
     let urlUploadFiles = ref(
       `api/v1/repairs/pprs/${props.pprId}/fileAttachment/`
     );
+    let urlTags = ref(`api/v1/repairs/pprs/${props.pprId}/fileAttachment/tags/?timestamp=${new Date().getTime()}`);
+    // let urlTags = ref(`api/v1/repairs/pprs/${props.pprId}/fileAttachment/tags/`);
 
     /**
      * Load attachments files
@@ -100,7 +105,7 @@ export default {
             closeBtn: true,
           });
 
-          console.err(err.response?.data?.message_error || err);
+          console.error(err.response?.data?.message_error || err);
         });
     })();
 
@@ -117,12 +122,19 @@ export default {
      * @param {*} fileItem
      */
     const onEventUpdateFile = (fileItem) => {
+      // console.log(fileItem);
       api
-        .put(`api/v1/file/${fileItem.id}`, fileItem)
+        .put(`api/v1/repairs/pprs/${props.pprId}/fileAttachment/${fileItem.id}`, fileItem)
         .then((response) => {
-          for (let idx in response.data) {
-            filesAttachments.value.push(new FileModel(response.data[idx]));
-          }
+          // for (let idx in response.data) {
+          //   filesAttachments.value.push(new FileModel(response.data[idx]));
+          // }
+
+          for(let idx = 0; idx < filesAttachments.value.length; idx++)
+            if(filesAttachments.value[idx].id == fileItem.id) {
+              filesAttachments.value[idx] = new FileModel(response.data);
+              break;
+            }
         })
         .catch((err) => {
           $q.notify({
@@ -135,7 +147,7 @@ export default {
             closeBtn: true,
           });
 
-          console.err(err.response?.data?.message_error || err);
+          console.error(err.response?.data?.message_error || err);
         });
     };
 
@@ -169,7 +181,7 @@ export default {
             closeBtn: true,
           });
 
-          console.err(err.response?.data?.message_error || err);
+          console.error(err.response?.data?.message_error || err);
         });
     };
 
@@ -190,6 +202,7 @@ export default {
       filesToUpload,
       filesAttachments,
       urlUploadFiles,
+      urlTags,
     };
   },
 };

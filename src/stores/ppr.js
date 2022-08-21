@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { api } from "boot/axios";
 import PprDateTimeModel from "src/models/repairsList/PprDateTimeModel";
-import FileModel from 'src/models/FileModel';
+import FileModel from 'src/models/files/FileModel';
 import * as utils from "src/utils";
 
 

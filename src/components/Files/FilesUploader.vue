@@ -17,11 +17,13 @@
           color="black"
           @click="onClickBtnClearFilesToUpload"
         >
-          <q-tooltip>Clear all</q-tooltip>
+          <q-tooltip>{{$t('clear_all')}}</q-tooltip>
         </q-btn>
       </div>
       <div class="col-7">
-        <div class="text-subtitle2">Upload your files</div>
+        <div class="text-subtitle2">
+          {{ $t("upload_your_files") }}
+        </div>
         <div class="text-caption">
           {{ filesAddedToUploadTotalSizeLabel }} /
           {{ filesAddedToUploadPercentUpload }} %
@@ -36,7 +38,7 @@
           color="black"
           @click="onClickBtnAddFilesToUpload"
         >
-          <q-tooltip>Add file(s)</q-tooltip>
+          <q-tooltip>{{ $t("add_file_s") }}</q-tooltip>
         </q-btn>
         <q-btn
           flat
@@ -51,7 +53,7 @@
           color="black"
           @click="onClickBtnUploadFilesToUpload"
         >
-          <q-tooltip>Upload file(s)</q-tooltip>
+          <q-tooltip>{{$t('upload_file_s')}}</q-tooltip>
         </q-btn>
       </div>
     </div>
@@ -61,7 +63,7 @@
         class="row justify-center items-center full-height full-width"
       >
         <div>
-          Drop files to upload
+          {{ $t("drop_files_to_upload") }}
           <q-img
             src="icons/drop_file.svg"
             fit="contain"
@@ -73,7 +75,9 @@
       <FileList
         v-if="filesAddedToUpload.length > 0"
         :files="filesAddedToUpload"
+        :urlTags="urlTags"
         :headerBar="false"
+        :btnEditdVisibled="false"
         :btnDownloadVisibled="false"
         class="full-width"
         @onUpdate="onUpdateFileDesc"
@@ -86,7 +90,7 @@
 <script>
 import { useQuasar } from "quasar";
 import { defineComponent, defineAsyncComponent, ref } from "vue";
-import FileModel from "src/models/FileModel.js";
+import FileModel from "src/models/files/FileModel";
 import FileList from "src/components/Files/FileList";
 import { api } from "boot/axios";
 import * as utils from "src/utils";
@@ -105,6 +109,10 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
+    urlTags: {
+      type: String,
+      required: true,
+    }
   },
 
   emits: ["onUploadedFile"],
@@ -168,12 +176,13 @@ export default defineComponent({
           });
 
           let dateTimeUTC = utils.getDateTimeUTCFromStr(dateTime);
-
           filesAddedToUpload.value.push(
             new FileModel({
               name: file.name,
               blob: file,
+              size: file.size,
               desc: null,
+              tags: [],
               dateTimeRawAdded: dateTime,
               dateTimeUTCAdded: dateTimeUTC,
             })
